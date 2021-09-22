@@ -154,6 +154,13 @@
 #    define DEFAULT_HOMING_CYCLE_5 bit(X_AXIS)
 #endif
 
+#ifndef DEFAULT_VELOCITY_SELECTOR
+#    define DEFAULT_VELOCITY_SELECTOR 0
+#endif
+
+#ifndef DEFAULT_REPORT_INPUTS
+#    define DEFAULT_REPORT_INPUTS 1
+#endif
 // ======== SPINDLE STUFF ====================
 #ifndef SPINDLE_TYPE
 #    define SPINDLE_TYPE SpindleType::PWM
@@ -629,6 +636,21 @@
 #    define USER_DIGITAL_PIN_3 UNDEFINED_PIN
 #endif
 
+#ifndef USER_DIGITAL_INPUT_PIN_0
+#    define USER_DIGITAL_INPUT_PIN_0 UNDEFINED_PIN
+#endif
+
+#ifndef USER_DIGITAL_INPUT_PIN_1
+#    define USER_DIGITAL_INPUT_PIN_1 UNDEFINED_PIN
+#endif
+
+#ifndef USER_DIGITAL_INPUT_PIN_2
+#    define USER_DIGITAL_INPUT_PIN_2 UNDEFINED_PIN
+#endif
+
+#ifndef USER_DIGITAL_INPUT_PIN_3
+#    define USER_DIGITAL_INPUT_PIN_3 UNDEFINED_PIN
+#endif
 // ================ User Analog I/O ==============================
 
 #ifndef USER_ANALOG_PIN_0

@@ -41,6 +41,8 @@ volatile Percent sys_rt_s_override;  // Global realtime executor spindle overrid
 UserOutput::AnalogOutput*  myAnalogOutputs[MaxUserDigitalPin];
 UserOutput::DigitalOutput* myDigitalOutputs[MaxUserDigitalPin];
 
+UserInput::DigitalInput*   myDigitalInputs[MaxUserDigitalPin];
+
 xQueueHandle control_sw_queue;    // used by control switch debouncing
 bool         debouncing = false;  // debouncing in process
 
@@ -108,6 +110,12 @@ void system_ini() {  // Renamed from system_init() due to conflict with esp32 fi
     myDigitalOutputs[1] = new UserOutput::DigitalOutput(1, USER_DIGITAL_PIN_1);
     myDigitalOutputs[2] = new UserOutput::DigitalOutput(2, USER_DIGITAL_PIN_2);
     myDigitalOutputs[3] = new UserOutput::DigitalOutput(3, USER_DIGITAL_PIN_3);
+
+    myDigitalInputs[0] = new UserInput::DigitalInput(0, USER_DIGITAL_INPUT_PIN_0);
+    myDigitalInputs[1] = new UserInput::DigitalInput(1, USER_DIGITAL_INPUT_PIN_1);
+    myDigitalInputs[2] = new UserInput::DigitalInput(2, USER_DIGITAL_INPUT_PIN_2);
+    myDigitalInputs[3] = new UserInput::DigitalInput(3, USER_DIGITAL_INPUT_PIN_3);
+
 
     // Setup M67 Pins
     myAnalogOutputs[0] = new UserOutput::AnalogOutput(0, USER_ANALOG_PIN_0, USER_ANALOG_PIN_0_FREQ);
@@ -300,6 +308,18 @@ bool sys_set_analog(uint8_t io_num, float percent) {
     auto     analog    = myAnalogOutputs[io_num];
     uint32_t numerator = percent / 100.0 * analog->denominator();
     return analog->set_level(numerator);
+}
+
+uint8_t sys_get_digital_inputs(){
+	uint8_t state = 0;	
+	for(int input_number=0;input_number<=3;++input_number)
+		state |= (myDigitalInputs[input_number]->get()<<input_number);	
+	return state;
+}
+void sys_update_feed_override() {
+	uint8_t value = myDigitalInputs[0]->get() + myDigitalInputs[1]->get()*2;	
+	sys_rt_f_override = 
+	sys_rt_r_override = (value==1)*25 + (value==2)*75 + (value==3)*100;
 }
 
 /*

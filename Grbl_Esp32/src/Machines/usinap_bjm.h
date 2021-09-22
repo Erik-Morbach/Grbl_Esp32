@@ -27,7 +27,7 @@
 
 #define MACHINE_NAME            "Usinap, BJM Machine"
 
-#define DEFAULT_VELOCITY_SELECTOR false
+#define DEFAULT_VELOCITY_SELECTOR true
 
 #ifdef N_AXIS
         #undef N_AXIS
@@ -65,8 +65,8 @@
 #define X_LIMIT_PIN             GPIO_NUM_34
 #define Z_LIMIT_PIN             GPIO_NUM_21
 
-#define FEED_OVERRIDE_BIT1_PIN 	GPIO_NUM_33
-#define FEED_OVERRIDE_BIT2_PIN	GPIO_NUM_35
+#define USER_DIGITAL_INPUT_PIN_0 GPIO_NUM_33
+#define USER_DIGITAL_INPUT_PIN_1 GPIO_NUM_35
 
 #define CONTROL_FEED_HOLD_PIN	GPIO_NUM_39
 #define CONTROL_CYCLE_START_PIN	GPIO_NUM_36
@@ -104,10 +104,5 @@
 #define DEFAULT_SOFT_LIMIT_ENABLE 1 // $20
 #define DEFAULT_HOMING_ENABLE 1  // $22 
 #define DEFAULT_HOMING_DIR_MASK 0  // $23 
-
-
-void update_feedrate_override();
-
-#define CUSTOM_CODE_FILENAME "Custom/usinap.cpp"
 
 

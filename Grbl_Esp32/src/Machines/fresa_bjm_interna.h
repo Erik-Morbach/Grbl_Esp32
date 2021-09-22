@@ -85,13 +85,14 @@
 
 
 #define X_LIMIT_PIN             GPIO_NUM_34
-#define Y_LIMIT_PIN             GPIO_NUM_35
+#define Y_LIMIT_PIN             GPIO_NUM_34
 #define Z_LIMIT_PIN             GPIO_NUM_34
 
-#define PROBE_PIN               GPIO_NUM_39
 //#define COOLANT_MIST_PIN        GPIO_NUM_21
 
 #define USER_DIGITAL_PIN_0 GPIO_NUM_26
+#define USER_DIGITAL_INPUT_PIN_0 GPIO_NUM_39
+#define USER_DIGITAL_INPUT_PIN_1 GPIO_NUM_33
 
 
 

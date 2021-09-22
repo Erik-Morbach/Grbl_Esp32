@@ -177,4 +177,8 @@ void sys_digital_all_off();
 bool sys_set_analog(uint8_t io_num, float percent);
 void sys_analog_all_off();
 
+uint8_t sys_get_digital_inputs();
+
+void sys_update_feed_override();
+
 int8_t sys_get_next_PWM_chan_num();

@@ -65,6 +65,7 @@ const char* const GRBL_VERSION_BUILD = "20210816";
 #include "WebUI/WebSettings.h"
 
 #include "UserOutput.h"
+#include "UserInput.h"
 
 #include <Wire.h>
 

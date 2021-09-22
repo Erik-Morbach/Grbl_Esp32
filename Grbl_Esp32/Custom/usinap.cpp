@@ -40,13 +40,8 @@ Below are all the current weak function
 */
 
 void machine_init(){
-	pinMode(FEED_OVERRIDE_BIT1_PIN,INPUT);
-	pinMode(FEED_OVERRIDE_BIT2_PIN,INPUT);
+	pinMode(DEFAULT_FEED_OVERRIDE_BIT1_PIN,INPUT);
+	pinMode(DEFAULT_FEED_OVERRIDE_BIT2_PIN,INPUT);
 }
 
-void update_feedrate_override() {
-	uint8_t value = digitalRead(FEED_OVERRIDE_BIT1_PIN) + digitalRead(FEED_OVERRIDE_BIT2_PIN)*2;	
-	sys_rt_f_override = 
-	sys_rt_r_override = (value==1)*25 + (value==2)*75 + (value==3)*100;
-}
 

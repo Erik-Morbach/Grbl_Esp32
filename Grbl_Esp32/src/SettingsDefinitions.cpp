@@ -64,6 +64,8 @@ EnumSetting* message_level;
 
 FlagSetting* bjm_velocity_selector;
 
+FlagSetting* report_inputs;
+
 enum_opt_t spindleTypes = {
     // clang-format off
     { "NONE", int8_t(SpindleType::NONE) },
@@ -423,4 +425,6 @@ void make_settings() {
     message_level = +new EnumSetting(NULL, EXTENDED, WG, NULL, "Message/Level", static_cast<int8_t>(MsgLevel::Info), &messageLevels, NULL);
 
     bjm_velocity_selector = new FlagSetting(NULL, EXTENDED,WG, NULL, "Bjm/EnableVelocitySelector", DEFAULT_VELOCITY_SELECTOR,NULL);
+
+    report_inputs = new FlagSetting(NULL, EXTENDED, WG, NULL, "Report/InputState", DEFAULT_REPORT_INPUTS,NULL);
 }
