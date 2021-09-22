@@ -25,7 +25,7 @@
     along with Grbl_ESP32.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define MACHINE_NAME            "Usinap, BJM Machine"
+#define MACHINE_NAME            "Stramosk, BJM Machine"
 
 #define DEFAULT_VELOCITY_SELECTOR true
 
@@ -53,17 +53,17 @@
 
 
 #define SPINDLE_TYPE            SpindleType::PWM // only one spindle at a time
-#define SPINDLE_OUTPUT_PIN      GPIO_NUM_4
-#define SPINDLE_ENABLE_PIN      GPIO_NUM_12
-#define SPINDLE_DIR_PIN		GPIO_NUM_13
-#define SPINDLE_CW_PIN		GPIO_NUM_26
-#define SPINDLE_CCW_PIN		GPIO_NUM_22
+#define SPINDLE_OUTPUT_PIN      GPIO_NUM_13
+#define SPINDLE_ENABLE_PIN      GPIO_NUM_32
+#define SPINDLE_DIR_PIN		GPIO_NUM_12
+#define SPINDLE_CW_PIN		GPIO_NUM_4
+#define SPINDLE_CCW_PIN		GPIO_NUM_15
 #define DEFAULT_SPINDLE_RPM_MAX 4000.0  // rpm
 #define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 0
 
 
 #define X_LIMIT_PIN             GPIO_NUM_34
-#define Z_LIMIT_PIN             GPIO_NUM_21
+#define Z_LIMIT_PIN             GPIO_NUM_34
 
 #define USER_DIGITAL_INPUT_PIN_0 GPIO_NUM_33
 #define USER_DIGITAL_INPUT_PIN_1 GPIO_NUM_35
@@ -71,9 +71,10 @@
 #define CONTROL_FEED_HOLD_PIN	GPIO_NUM_39
 #define CONTROL_CYCLE_START_PIN	GPIO_NUM_36
 
-#define COOLANT_MIST_PIN        GPIO_NUM_27
+#define COOLANT_MIST_PIN        GPIO_NUM_26
 
-#define USER_DIGITAL_PIN_0 GPIO_NUM_25
+#define USER_DIGITAL_PIN_0 GPIO_NUM_22
+#define USER_DIGITAL_PIN_1 GPIO_NUM_25
 
 #ifdef INVERT_CONTROL_PIN_MASK
 	#undef INVERT_CONTROL_PIN_MASK
@@ -96,8 +97,8 @@
 #define DEFAULT_HOMING_CYCLE_0 bit(Z_AXIS)
 #define DEFAULT_HOMING_CYCLE_1 bit(X_AXIS)
 
-#define DEFAULT_HOMING_FEED_RATE 25.0
-#define DEFAULT_HOMING_SEEK_RATE 500.0
+#define DEFAULT_HOMING_FEED_RATE 100.0
+#define DEFAULT_HOMING_SEEK_RATE 1000.0
 
 #define DEFAULT_DIRECTION_INVERT_MASK 0  // $3 uint8_
 #define DEFAULT_JUNCTION_DEVIATION 0.01  // $11 mm
