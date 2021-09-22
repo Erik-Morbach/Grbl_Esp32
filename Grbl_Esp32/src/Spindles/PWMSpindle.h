@@ -53,6 +53,8 @@ namespace Spindles {
         uint8_t  _output_pin;
         uint8_t  _enable_pin;
         uint8_t  _direction_pin;
+	uint8_t  _cw_pin;
+	uint8_t  _ccw_pin;
         uint8_t  _pwm_chan_num;
         uint32_t _pwm_freq;
         uint32_t _pwm_period;  // how many counts in 1 period

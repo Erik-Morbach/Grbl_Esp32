@@ -51,6 +51,8 @@ namespace Spindles {
         ledcAttachPin(_output_pin, _pwm_chan_num);                    // attach the PWM to the pin
         pinMode(_enable_pin, OUTPUT);
         pinMode(_direction_pin, OUTPUT);
+	pinMode(_cw_pin,OUTPUT);
+	pinMode(_ccw_pin,OUTPUT);
 
         config_message();
     }
@@ -79,6 +81,17 @@ namespace Spindles {
         _direction_pin = SPINDLE_DIR_PIN;
 #else
         _direction_pin    = UNDEFINED_PIN;
+#endif
+
+#ifdef SPINDLE_CW_PIN
+	_cw_pin = SPINDLE_CW_PIN;
+#else 
+	_cw_pin = UNDEFINED_PIN;
+#endif
+#ifdef SPINDLE_CCW_PIN
+	_ccw_pin = SPINDLE_CCW_PIN;
+#else
+	_ccw_pin = UNDEFINED_PIN;
 #endif
 
         if (_output_pin == UNDEFINED_PIN) {
@@ -196,6 +209,8 @@ namespace Spindles {
         // inverts are delt with in methods
         set_enable_pin(false);
         set_output(_pwm_off_value);
+	digitalWrite(_cw_pin,0);
+	digitalWrite(_ccw_pin,0);
     }
 
     // prints the startup message of the spindle config
@@ -261,7 +276,10 @@ namespace Spindles {
         digitalWrite(_enable_pin, enable);
     }
 
-    void PWM::set_dir_pin(bool Clockwise) { digitalWrite(_direction_pin, Clockwise); }
+    void PWM::set_dir_pin(bool Clockwise) { 
+	    digitalWrite(_cw_pin , Clockwise); 
+	    digitalWrite(_ccw_pin,!Clockwise);
+    }
 
     /*
 		Calculate the highest precision of a PWM based on the frequency in bits
@@ -294,6 +312,16 @@ namespace Spindles {
 #ifdef SPINDLE_DIR_PIN
         gpio_reset_pin(SPINDLE_DIR_PIN);
         pinMode(SPINDLE_DIR_PIN, INPUT);
+#endif
+
+#ifdef SPINDLE_CW_PIN
+	gpio_reset_pin(SPINDLE_CW_PIN);
+	pinMode(SPINDLE_CW_PIN,INPUT);
+#endif
+
+#ifdef SPINDLE_CCW_PIN
+	gpio_reset_pin(SPINDLE_CCW_PIN);
+	pinMode(SPINDLE_CCW_PIN,INPUT);
 #endif
     }
 }

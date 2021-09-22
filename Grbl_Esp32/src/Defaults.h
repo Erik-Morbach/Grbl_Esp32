@@ -39,7 +39,7 @@
 
 // Grbl generic default settings. Should work across different machines.
 #ifndef DEFAULT_STEP_PULSE_MICROSECONDS
-#    define DEFAULT_STEP_PULSE_MICROSECONDS 3  // $0
+#    define DEFAULT_STEP_PULSE_MICROSECONDS 5  // $0
 #endif
 
 #ifndef DEFAULT_STEP_ENABLE_DELAY
@@ -67,7 +67,7 @@
 #endif
 
 #ifndef DEFAULT_INVERT_LIMIT_PINS
-#    define DEFAULT_INVERT_LIMIT_PINS 1  // $5 boolean
+#    define DEFAULT_INVERT_LIMIT_PINS 0  // $5 boolean
 #endif
 
 #ifndef DEFAULT_INVERT_PROBE_PIN
@@ -95,7 +95,7 @@
 #endif
 
 #ifndef DEFAULT_SOFT_LIMIT_ENABLE
-#    define DEFAULT_SOFT_LIMIT_ENABLE 0  // $20 false
+#    define DEFAULT_SOFT_LIMIT_ENABLE 1  // $20 false
 #endif
 
 #ifndef DEFAULT_HARD_LIMIT_ENABLE
@@ -103,11 +103,11 @@
 #endif
 
 #ifndef DEFAULT_HOMING_ENABLE
-#    define DEFAULT_HOMING_ENABLE 0  // $22 false
+#    define DEFAULT_HOMING_ENABLE 1  // $22 false
 #endif
 
 #ifndef DEFAULT_HOMING_DIR_MASK
-#    define DEFAULT_HOMING_DIR_MASK 3  // $23 move positive dir Z, negative X,Y
+#    define DEFAULT_HOMING_DIR_MASK 0  // $23 move positive dir Z, negative X,Y
 #endif
 
 #ifndef DEFAULT_HOMING_FEED_RATE
@@ -115,7 +115,7 @@
 #endif
 
 #ifndef DEFAULT_HOMING_SEEK_RATE
-#    define DEFAULT_HOMING_SEEK_RATE 2000.0  // $25 mm/min
+#    define DEFAULT_HOMING_SEEK_RATE 1000.0  // $25 mm/min
 #endif
 
 #ifndef DEFAULT_HOMING_DEBOUNCE_DELAY
@@ -135,28 +135,28 @@
 #endif
 
 #ifndef DEFAULT_HOMING_CYCLE_1
-#    define DEFAULT_HOMING_CYCLE_1 (bit(X_AXIS) | bit(Y_AXIS))
+#    define DEFAULT_HOMING_CYCLE_1 bit(A_AXIS)
 #endif
 
 #ifndef DEFAULT_HOMING_CYCLE_2
-#    define DEFAULT_HOMING_CYCLE_2 0
+#    define DEFAULT_HOMING_CYCLE_2 bit(B_AXIS)
 #endif
 
 #ifndef DEFAULT_HOMING_CYCLE_3
-#    define DEFAULT_HOMING_CYCLE_3 0
+#    define DEFAULT_HOMING_CYCLE_3 bit(C_AXIS)
 #endif
 
 #ifndef DEFAULT_HOMING_CYCLE_4
-#    define DEFAULT_HOMING_CYCLE_4 0
+#    define DEFAULT_HOMING_CYCLE_4 bit(Y_AXIS)
 #endif
 
 #ifndef DEFAULT_HOMING_CYCLE_5
-#    define DEFAULT_HOMING_CYCLE_5 0
+#    define DEFAULT_HOMING_CYCLE_5 bit(X_AXIS)
 #endif
 
 // ======== SPINDLE STUFF ====================
 #ifndef SPINDLE_TYPE
-#    define SPINDLE_TYPE SpindleType::NONE
+#    define SPINDLE_TYPE SpindleType::PWM
 #endif
 
 #ifndef DEFAULT_SPINDLE_RPM_MIN          // $31
@@ -204,7 +204,7 @@
 #endif
 
 #ifndef DEFAULT_INVERT_SPINDLE_OUTPUT_PIN
-#    define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 0
+#    define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 1
 #endif
 
 #ifndef DEFAULT_INVERT_SPINDLE_ENABLE_PIN
@@ -262,37 +262,37 @@
 #    define DEFAULT_X_STEPS_PER_MM 100.0
 #endif
 #ifndef DEFAULT_Y_STEPS_PER_MM
-#    define DEFAULT_Y_STEPS_PER_MM 100.0
+#    define DEFAULT_Y_STEPS_PER_MM 400.0
 #endif
 #ifndef DEFAULT_Z_STEPS_PER_MM
-#    define DEFAULT_Z_STEPS_PER_MM 100.0
+#    define DEFAULT_Z_STEPS_PER_MM 200.0
 #endif
 #ifndef DEFAULT_A_STEPS_PER_MM
-#    define DEFAULT_A_STEPS_PER_MM 100.0
+#    define DEFAULT_A_STEPS_PER_MM 400.0
 #endif
 #ifndef DEFAULT_B_STEPS_PER_MM
 #    define DEFAULT_B_STEPS_PER_MM 100.0
 #endif
 #ifndef DEFAULT_C_STEPS_PER_MM
-#    define DEFAULT_C_STEPS_PER_MM 100.0
+#    define DEFAULT_C_STEPS_PER_MM 400.0
 #endif
 
 // ============ AXIS MAX SPPED =========
 
 #ifndef DEFAULT_X_MAX_RATE
-#    define DEFAULT_X_MAX_RATE 1000.0  // mm/min
+#    define DEFAULT_X_MAX_RATE 10000.0  // mm/min
 #endif
 #ifndef DEFAULT_Y_MAX_RATE
 #    define DEFAULT_Y_MAX_RATE 1000.0  // mm/min
 #endif
 #ifndef DEFAULT_Z_MAX_RATE
-#    define DEFAULT_Z_MAX_RATE 1000.0  // mm/min
+#    define DEFAULT_Z_MAX_RATE 10000.0  // mm/min
 #endif
 #ifndef DEFAULT_A_MAX_RATE
 #    define DEFAULT_A_MAX_RATE 1000.0  // mm/min
 #endif
 #ifndef DEFAULT_B_MAX_RATE
-#    define DEFAULT_B_MAX_RATE 1000.0  // mm/min
+#    define DEFAULT_B_MAX_RATE 5000.0  // mm/min
 #endif
 #ifndef DEFAULT_C_MAX_RATE
 #    define DEFAULT_C_MAX_RATE 1000.0  // mm/min
@@ -302,40 +302,40 @@
 #define SEC_PER_MIN_SQ (60.0 * 60.0)  // Seconds Per Minute Squared, for acceleration conversion
 // Default accelerations are expressed in mm/sec^2
 #ifndef DEFAULT_X_ACCELERATION
-#    define DEFAULT_X_ACCELERATION 200.0
+#    define DEFAULT_X_ACCELERATION 2000.0
 #endif
 #ifndef DEFAULT_Y_ACCELERATION
-#    define DEFAULT_Y_ACCELERATION 200.0
+#    define DEFAULT_Y_ACCELERATION 1000.0
 #endif
 #ifndef DEFAULT_Z_ACCELERATION
-#    define DEFAULT_Z_ACCELERATION 200.0
+#    define DEFAULT_Z_ACCELERATION 2000.0
 #endif
 #ifndef DEFAULT_A_ACCELERATION
-#    define DEFAULT_A_ACCELERATION 200.0
+#    define DEFAULT_A_ACCELERATION 1000.0
 #endif
 #ifndef DEFAULT_B_ACCELERATION
-#    define DEFAULT_B_ACCELERATION 200.0
+#    define DEFAULT_B_ACCELERATION 400.0
 #endif
 #ifndef DEFAULT_C_ACCELERATION
-#    define DEFAULT_C_ACCELERATION 200.0
+#    define DEFAULT_C_ACCELERATION 1000.0
 #endif
 
 // ========= AXIS MAX TRAVEL ============
 
 #ifndef DEFAULT_X_MAX_TRAVEL
-#    define DEFAULT_X_MAX_TRAVEL 300.0  // $130 mm NOTE: Must be a positive value.
+#    define DEFAULT_X_MAX_TRAVEL 281.5  // $130 mm NOTE: Must be a positive value.
 #endif
 #ifndef DEFAULT_Y_MAX_TRAVEL
 #    define DEFAULT_Y_MAX_TRAVEL 300.0  // mm NOTE: Must be a positive value.
 #endif
 #ifndef DEFAULT_Z_MAX_TRAVEL
-#    define DEFAULT_Z_MAX_TRAVEL 300.0  // mm NOTE: Must be a positive value.
+#    define DEFAULT_Z_MAX_TRAVEL 127.0  // mm NOTE: Must be a positive value.
 #endif
 #ifndef DEFAULT_A_MAX_TRAVEL
 #    define DEFAULT_A_MAX_TRAVEL 300.0  // mm NOTE: Must be a positive value.
 #endif
 #ifndef DEFAULT_B_MAX_TRAVEL
-#    define DEFAULT_B_MAX_TRAVEL 300.0  // mm NOTE: Must be a positive value.
+#    define DEFAULT_B_MAX_TRAVEL 79.0  // mm NOTE: Must be a positive value.
 #endif
 #ifndef DEFAULT_C_MAX_TRAVEL
 #    define DEFAULT_C_MAX_TRAVEL 300.0  // mm NOTE: Must be a positive value.

@@ -344,6 +344,9 @@ void execute_realtime_command(Cmd command, uint8_t client) {
             sys_rt_exec_accessory_override.bit.coolantMistOvrToggle = 1;
             break;
     }
+#ifdef RAPID_FEED_DEPENDENT
+    sys_rt_r_override = sys_rt_f_override;
+#endif
 }
 
 void client_write(uint8_t client, const char* text) {

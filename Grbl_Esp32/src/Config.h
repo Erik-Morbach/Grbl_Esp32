@@ -54,10 +54,10 @@ Some features should not be changed. See notes below.
 // The mask order is ...
 // Macro3 | Macro2 | Macro 1| Macr0 |Cycle Start | Feed Hold | Reset | Safety Door
 // For example B1101 will invert the function of the Reset pin.
-#define INVERT_CONTROL_PIN_MASK B00001111
+#define INVERT_CONTROL_PIN_MASK B00000000
 
-// #define ENABLE_CONTROL_SW_DEBOUNCE     // Default disabled. Uncomment to enable.
-#define CONTROL_SW_DEBOUNCE_PERIOD 32  // in milliseconds default 32 microseconds
+#define ENABLE_CONTROL_SW_DEBOUNCE     // Default disabled. Uncomment to enable.
+#define CONTROL_SW_DEBOUNCE_PERIOD 500  // in milliseconds default 32 microseconds
 
 #define USE_RMT_STEPS
 
@@ -106,13 +106,13 @@ const int MAX_N_AXIS = 6;
 #    define WIFI_OR_BLUETOOTH
 #endif
 
-#define ENABLE_HTTP                //enable HTTP and all related services
-#define ENABLE_OTA                 //enable OTA
-#define ENABLE_TELNET              //enable telnet
-#define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
-#define ENABLE_MDNS                //enable mDNS discovery
-#define ENABLE_SSDP                //enable UPNP discovery
-#define ENABLE_NOTIFICATIONS       //enable notifications
+ #define ENABLE_HTTP                //enable HTTP and all related services
+ #define ENABLE_OTA                 //enable OTA
+ #define ENABLE_TELNET              //enable telnet
+ #define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
+ #define ENABLE_MDNS                //enable mDNS discovery
+ #define ENABLE_SSDP                //enable UPNP discovery
+ #define ENABLE_NOTIFICATIONS       //enable notifications
 
 #define ENABLE_SERIAL2SOCKET_IN
 #define ENABLE_SERIAL2SOCKET_OUT
@@ -277,7 +277,7 @@ static const uint8_t NHomingLocateCycle = 1;  // Integer (1-128)
 // Grbl doesn't know its position and to force the user to home before proceeding. This option forces
 // Grbl to always initialize into an ALARM state regardless of homing or not. This option is more for
 // OEMs and LinuxCNC users that would like this power-cycle behavior.
-// #define FORCE_INITIALIZATION_ALARM // Default disabled. Uncomment to enable.
+ #define FORCE_INITIALIZATION_ALARM // Default disabled. Uncomment to enable.
 
 // At power-up or a reset, Grbl will check the limit switch states to ensure they are not active
 // before initialization. If it detects a problem and the hard limits setting is enabled, Grbl will
@@ -297,7 +297,7 @@ static const uint8_t NHomingLocateCycle = 1;  // Integer (1-128)
 namespace FeedOverride {
     const int Default         = 100;  // 100%. Don't change this value.
     const int Max             = 200;  // Percent of programmed feed rate (100-255). Usually 120% or 200%
-    const int Min             = 10;   // Percent of programmed feed rate (1-100). Usually 50% or 1%
+    const int Min             = 1;   // Percent of programmed feed rate (1-100). Usually 50% or 1%
     const int CoarseIncrement = 10;   // (1-99). Usually 10%.
     const int FineIncrement   = 1;    // (1-99). Usually 1%.
 };
@@ -362,7 +362,7 @@ const int ACCELERATION_TICKS_PER_SECOND = 100;
 // step rate is strictly limited by the CPU speed and will change if something other than an AVR running
 // at 16MHz is used.
 // NOTE: For now disabled, will enable if flash space permits.
-// #define MAX_STEP_RATE_HZ 30000 // Hz
+ #define MAX_STEP_RATE_HZ 110000 // Hz
 
 // By default, Grbl sets all input pins to normal-high operation with their internal pull-up resistors
 // enabled. This simplifies the wiring for users by requiring only a switch connected to ground,
@@ -486,7 +486,7 @@ const int DWELL_TIME_STEP = 50;  // Integer (1-255) (milliseconds)
 // A simple software debouncing feature for hard limit switches. When enabled, the limit
 // switch interrupt unblock a waiting task which will recheck the limit switch pins after
 // a short delay. Default disabled
-//#define ENABLE_SOFTWARE_DEBOUNCE // Default disabled. Uncomment to enable.
+#define ENABLE_SOFTWARE_DEBOUNCE // Default disabled. Uncomment to enable.
 const int DEBOUNCE_PERIOD = 32;  // in milliseconds default 32 microseconds
 
 // Configures the position after a probing cycle during Grbl's check mode. Disabled sets
