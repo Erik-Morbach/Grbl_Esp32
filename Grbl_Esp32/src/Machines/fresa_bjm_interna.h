@@ -79,7 +79,7 @@
 #define Z_STEP_PIN              GPIO_NUM_17
 #define Z_DIRECTION_PIN         GPIO_NUM_16
 
-#define SPINDLE_TYPE            SpindleType::DAC 
+#define SPINDLE_TYPE            SpindleType::PWM 
 #define SPINDLE_OUTPUT_PIN      GPIO_NUM_25
 #define SPINDLE_ENABLE_PIN      GPIO_NUM_22
 
@@ -101,7 +101,11 @@
 #ifdef DEFAULT_HOMING_CYCLE_1
 	#undef DEFAULT_HOMING_CYCLE_1
 #endif
+#ifdef DEFAULT_HOMING_CYCLE_2
+	#undef DEFAULT_HOMING_CYCLE_2
+#endif
 
 #define DEFAULT_HOMING_CYCLE_0 bit(Z_AXIS)
-#define DEFAULT_HOMING_CYCLE_1 (bit(X_AXIS)|bit(Y_AXIS))
+#define DEFAULT_HOMING_CYCLE_1 bit(X_AXIS)
+#define DEFAULT_HOMING_CYCLE_2 bit(Z_AXIS)
 
