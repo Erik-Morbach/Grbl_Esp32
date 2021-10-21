@@ -54,12 +54,12 @@ Some features should not be changed. See notes below.
 // The mask order is ...
 // Macro3 | Macro2 | Macro 1| Macr0 |Cycle Start | Feed Hold | Reset | Safety Door
 // For example B1101 will invert the function of the Reset pin.
-#define INVERT_CONTROL_PIN_MASK B00000000
+#define INVERT_CONTROL_PIN_MASK B00000010
 
 #define ENABLE_CONTROL_SW_DEBOUNCE     // Default disabled. Uncomment to enable.
 #define CONTROL_SW_DEBOUNCE_PERIOD 500  // in milliseconds default 32 microseconds
 
-#define USE_RMT_STEPS
+//#define USE_RMT_STEPS
 
 // Include the file that loads the machine-specific config file.
 // machine.h must be edited to choose the desired file.
@@ -100,28 +100,31 @@ const int MAX_N_AXIS = 6;
 
 #define ENABLE_SD_CARD  // enable use of SD Card to run jobs
 
-#define ENABLE_WIFI  //enable wifi
+//#define ENABLE_WIFI  //enable wifi
 
 #if defined(ENABLE_WIFI) || defined(ENABLE_BLUETOOTH)
 #    define WIFI_OR_BLUETOOTH
 #endif
 
- #define ENABLE_HTTP                //enable HTTP and all related services
- #define ENABLE_OTA                 //enable OTA
- #define ENABLE_TELNET              //enable telnet
- #define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
- #define ENABLE_MDNS                //enable mDNS discovery
- #define ENABLE_SSDP                //enable UPNP discovery
- #define ENABLE_NOTIFICATIONS       //enable notifications
+//#define ENABLE_HTTP                //enable HTTP and all related services
+//#define ENABLE_OTA                 //enable OTA
+//#define ENABLE_TELNET              //enable telnet
+//#define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
+//#define ENABLE_MDNS                //enable mDNS discovery
+//#define ENABLE_SSDP                //enable UPNP discovery
+//#define ENABLE_NOTIFICATIONS       //enable notifications
 
 #define ENABLE_SERIAL2SOCKET_IN
 #define ENABLE_SERIAL2SOCKET_OUT
+
+
+//#define ENABLE_I2C_PORT
 
 // Captive portal is used when WiFi is in access point mode.  It lets the
 // WebUI come up automatically in the browser, instead of requiring the user
 // to browse manually to a default URL.  It works like airport and hotel
 // WiFi that takes you a special page as soon as you connect to that AP.
-#define ENABLE_CAPTIVE_PORTAL
+//#define ENABLE_CAPTIVE_PORTAL
 
 // Warning! The current authentication implementation is too weak to provide
 // security against an attacker, since passwords are stored and transmitted
@@ -149,7 +152,7 @@ const int ESP_BT        = 3;
 #    ifdef CONNECT_TO_SSID
 const int DEFAULT_RADIO_MODE = ESP_WIFI_STA;
 #    else
-const int DEFAULT_RADIO_MODE = ESP_WIFI_AP;
+const int DEFAULT_RADIO_MODE = ESP_BT;
 #    endif  //CONNECT_TO_SSID
 #else
 #    undef ENABLE_NOTIFICATIONS
@@ -407,7 +410,7 @@ const int TOOL_LENGTH_OFFSET_AXIS = Z_AXIS;  // Default z-axis. Valid values are
 // limits or angle between neighboring block line move directions. This is useful for machines that can't
 // tolerate the tool dwelling for a split second, i.e. 3d printers or laser cutters. If used, this value
 // should not be much greater than zero or to the minimum value necessary for the machine to work.
-const double MINIMUM_JUNCTION_SPEED = 0.0;  // (mm/min)
+const double MINIMUM_JUNCTION_SPEED = 0.001;  // (mm/min)
 
 // Sets the minimum feed rate the planner will allow. Any value below it will be set to this minimum
 // value. This also ensures that a planned motion always completes and accounts for any floating-point
@@ -487,7 +490,7 @@ const int DWELL_TIME_STEP = 50;  // Integer (1-255) (milliseconds)
 // switch interrupt unblock a waiting task which will recheck the limit switch pins after
 // a short delay. Default disabled
 #define ENABLE_SOFTWARE_DEBOUNCE // Default disabled. Uncomment to enable.
-const int DEBOUNCE_PERIOD = 32;  // in milliseconds default 32 microseconds
+const int DEBOUNCE_PERIOD = 50;  // in milliseconds default 32 microseconds
 
 // Configures the position after a probing cycle during Grbl's check mode. Disabled sets
 // the position to the probe target, when enabled sets the position to the start position.

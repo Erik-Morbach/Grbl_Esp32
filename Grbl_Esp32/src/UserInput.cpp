@@ -36,6 +36,8 @@ namespace UserInput{
 
 	void DigitalInput::init(){
 		pinMode(this->_pin,INPUT);
+
+		this->config_message();
 	}
 
 	void DigitalInput::config_message(){

@@ -161,6 +161,14 @@
 #ifndef DEFAULT_REPORT_INPUTS
 #    define DEFAULT_REPORT_INPUTS 1
 #endif
+
+#ifndef NUMBER_I2C_DEVICES
+#    define NUMBER_I2C_DEVICES 1
+#endif
+
+#ifndef DEFAULT_FO_RO_DEPENDENT
+#    define DEFAULT_FO_RO_DEPENDENT false
+#endif
 // ======== SPINDLE STUFF ====================
 #ifndef SPINDLE_TYPE
 #    define SPINDLE_TYPE SpindleType::PWM

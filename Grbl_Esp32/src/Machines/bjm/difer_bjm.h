@@ -33,6 +33,9 @@
 #endif
 #define N_AXIS 5
 
+#define DEFAULT_VELOCITY_SELECTOR false
+#define DEFAULT_FO_RO_DEPENDENT true
+
 #define X_STEP_PIN              GPIO_NUM_17
 #define X_DIRECTION_PIN         GPIO_NUM_27
 #define B_STEP_PIN              GPIO_NUM_16
@@ -40,10 +43,28 @@
 #define Z_STEP_PIN              GPIO_NUM_15
 #define Z_DIRECTION_PIN         GPIO_NUM_4
 
+#define DEFAULT_X_STEPS_PER_MM 100
+#define DEFAULT_Z_STEPS_PER_MM 200
+#define DEFAULT_B_STEPS_PER_MM 100
+
+#define DEFAULT_X_MAX_RATE 10000
+#define DEFAULT_Z_MAX_RATE 10000
+#define DEFAULT_B_MAX_RATE 5000
+
+#define DEFAULT_X_ACCELERATION 2000
+#define DEFAULT_Z_ACCELERATION 2000
+#define DEFAULT_B_ACCELERATION 400
+
+#define DEFAULT_X_MAX_TRAVEL 281.500
+#define DEFAULT_Z_MAX_TRAVEL 127.000
+#define DEFAULT_B_MAX_TRAVEL  79.000
 
 #define SPINDLE_TYPE            SpindleType::PWM // only one spindle at a time
 #define SPINDLE_OUTPUT_PIN      GPIO_NUM_13
 #define SPINDLE_ENABLE_PIN      GPIO_NUM_22
+#define DEFAULT_SPINDLE_RPM_MAX 2000
+#define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 1
+
 
 
 #define X_LIMIT_PIN             GPIO_NUM_34
@@ -51,14 +72,11 @@
 #define B_LIMIT_PIN             GPIO_NUM_35
 
 
-#define RAPID_FEED_DEPENDENT
-
 #define CONTROL_RESET_PIN       GPIO_NUM_33  // labeled Reset, needs external pullup
 #define CONTROL_FEED_HOLD_PIN   GPIO_NUM_36  // labeled Hold,  needs external pullup
 #define CONTROL_CYCLE_START_PIN GPIO_NUM_39  // labeled Start, needs external pullup
 
 
-//#define PROBE_PIN               GPIO_NUM_39
 #define COOLANT_MIST_PIN        GPIO_NUM_25
 
 #define USER_DIGITAL_PIN_0 GPIO_NUM_26
@@ -77,6 +95,20 @@
 #define DEFAULT_HOMING_CYCLE_0 bit(Z_AXIS)
 #define DEFAULT_HOMING_CYCLE_1 bit(X_AXIS)
 #define DEFAULT_HOMING_CYCLE_2 bit(B_AXIS)
+
+#define DEFAULT_HOMING_FEED_RATE 200.0
+#define DEFAULT_HOMING_SEEK_RATE 1000.0
+
+#ifdef CONTROL_SW_DEBOUNCE_PERIOD
+	#undef CONTROL_SW_DEBOUNCE_PERIOD
+#endif 
+#define CONTROL_SW_DEBOUNCE_PERIOD 250
+
+#define DEFAULT_DIRECTION_INVERT_MASK 0b10101  // $3 uint8_
+#define DEFAULT_JUNCTION_DEVIATION 0.01  // $11 mm
+#define DEFAULT_SOFT_LIMIT_ENABLE 1 // $20
+#define DEFAULT_HOMING_ENABLE 1  // $22 
+#define DEFAULT_HOMING_DIR_MASK 0  // $23 
 
 
 /*

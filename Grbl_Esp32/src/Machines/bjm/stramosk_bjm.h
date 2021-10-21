@@ -23,10 +23,12 @@
 
     You should have received a copy of the GNU General Public License
     along with Grbl_ESP32.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #define MACHINE_NAME            "Stramosk, BJM Machine"
 
+#define DEFAULT_FO_RO_DEPENDENT true
 #define DEFAULT_VELOCITY_SELECTOR true
 
 #ifdef N_AXIS
@@ -43,13 +45,13 @@
 #define DEFAULT_Z_STEPS_PER_MM 200.0
 
 #define DEFAULT_X_MAX_RATE 3000.0  // mm/min
-#define DEFAULT_Z_MAX_RATE 3000.0  // mm/min
+#define DEFAULT_Z_MAX_RATE 2000.0  // mm/min
 
 #define DEFAULT_X_ACCELERATION 400.0
 #define DEFAULT_Z_ACCELERATION 400.0
 
-#define DEFAULT_X_MAX_TRAVEL 198.0  // $130 mm NOTE: Must be a positive value.
-#define DEFAULT_Z_MAX_TRAVEL 140.0  // $132 mm NOTE: Must be a positive value.
+#define DEFAULT_X_MAX_TRAVEL 286.0  // $130 mm NOTE: Must be a positive value.
+#define DEFAULT_Z_MAX_TRAVEL 159.4  // $132 mm NOTE: Must be a positive value.
 
 
 #define SPINDLE_TYPE            SpindleType::PWM // only one spindle at a time
@@ -58,18 +60,23 @@
 #define SPINDLE_DIR_PIN		GPIO_NUM_12
 #define SPINDLE_CW_PIN		GPIO_NUM_4
 #define SPINDLE_CCW_PIN		GPIO_NUM_15
-#define DEFAULT_SPINDLE_RPM_MAX 4000.0  // rpm
-#define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 0
+#define DEFAULT_SPINDLE_RPM_MAX 1740.0  // rpm
+#define DEFAULT_INVERT_SPINDLE_OUTPUT_PIN 1
+
+#define DEFAULT_SPINDLE_DELAY_SPINUP 3
+#define DEFAULT_SPINDLE_DELAY_SPINOFF 3
 
 
-#define X_LIMIT_PIN             GPIO_NUM_34
-#define Z_LIMIT_PIN             GPIO_NUM_34
+#define X_LIMIT_PIN             GPIO_NUM_39 
+#define Z_LIMIT_PIN             GPIO_NUM_39
 
 #define USER_DIGITAL_INPUT_PIN_0 GPIO_NUM_33
 #define USER_DIGITAL_INPUT_PIN_1 GPIO_NUM_35
 
-#define CONTROL_FEED_HOLD_PIN	GPIO_NUM_39
-#define CONTROL_CYCLE_START_PIN	GPIO_NUM_36
+#define CONTROL_RESET_PIN       GPIO_NUM_36
+
+#define CONTROL_FEED_HOLD_PIN	GPIO_NUM_34
+#define CONTROL_CYCLE_START_PIN	GPIO_NUM_21
 
 #define COOLANT_MIST_PIN        GPIO_NUM_26
 

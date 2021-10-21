@@ -239,14 +239,13 @@ void protocol_auto_cycle_start() {
 // NOTE: The sys_rt_exec_state.bit variable flags are set by any process, step or serial interrupts, pinouts,
 // limit switches, or the main program.
 void protocol_execute_realtime() {
-    if(bjm_velocity_selector->get()) sys_update_feed_override();
 
     protocol_exec_rt_system();
     if (sys.suspend.value) {
         protocol_exec_rt_suspend();
     }
-
-    if (system_control_get_state().bit.reset) sys.state = State::Alarm;
+    if(bjm_velocity_selector != nullptr && bjm_velocity_selector->get()) sys_update_feed_override();
+    if(system_control_get_state().bit.reset) sys.state = State::Alarm;
 }
 
 // Executes run-time commands, when required. This function primarily operates as Grbl's state

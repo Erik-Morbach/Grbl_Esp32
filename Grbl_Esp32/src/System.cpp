@@ -317,9 +317,12 @@ uint8_t sys_get_digital_inputs(){
 	return state;
 }
 void sys_update_feed_override() {
-	uint8_t value = myDigitalInputs[0]->get() + myDigitalInputs[1]->get()*2;	
-	sys_rt_f_override = 
-	sys_rt_r_override = (value==1)*25 + (value==2)*75 + (value==3)*100;
+	uint8_t value = sys_get_digital_inputs()&3;
+	value = (value==1)*25 + (value==2)*75 + (value==3)*100;
+	if(fo_ro_dependent->get()){
+		sys_rt_r_override = value;
+	}
+	sys_rt_f_override = value;
 }
 
 /*

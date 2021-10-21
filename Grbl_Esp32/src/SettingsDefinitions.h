@@ -74,3 +74,4 @@ extern EnumSetting* message_level;
 
 extern FlagSetting* bjm_velocity_selector;
 extern FlagSetting* report_inputs;
+extern FlagSetting* fo_ro_dependent;

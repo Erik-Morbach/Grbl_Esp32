@@ -38,23 +38,53 @@ Be careful to return the correct values
 Below are all the current weak function
 
 */
-#include "src/Grbl.h"
-volatile unsigned long lastEncoderChange;
-void IRAM_ATTR encoderRead(){
-	lastEncoderChange = millis();	
-}
+
 /*
 This function is used as a one time setup for your machine.
 */
+//#include "src/Grbl.h"
+//#include "src/Machines/fresa_bjm.h"
+//#include "src/I2C.h"
+
+
+
+/*
+I2C::Device::Element inputPort(0x01,I2C_MASTER_READ, 1, new uint8_t[1]);
+I2C::Device::Element jogKeyboard(0x02,I2C_MASTER_READ,1, new uint8_t[1]);
+
+I2C::Device::Element outputPort(0x03, I2C_MASTER_WRITE,1, new uint8_t[1]);
+
+I2C::Device ioExtender(0x01,20/*ms, 10 /*ms);
+
+void desiredFunction(uint8_t *values, uint8_t size);
+*/
 void machine_init() {
-	pinMode(ENCODER_INPUT,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_0,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_1,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_2,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_3,INPUT);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_INPUT),encoderRead,CHANGE);
-	lastEncoderChange = millis();
-	client_write(CLIENT_SERIAL,"SEVENCUT INIT\n");
+  /*
+  ioExtender.addElement(inputPort);
+  ioExtender.addElement(jogKeyboard);
+  ioExtender.addElement(outputPort);
+
+  I2C::Module::getInstance().addDevice(ioExtender);
+
+  I2C::Mapper &mapper = I2C::Mapper::getInstance();
+*/
+/*
+  #define CONTROL_CYCLE_START_PIN ELEMENT_BIT_IDENTIFY_1
+  will be redirected to inputPort bit 3
+  mapper.bindBit(inputPort,(1<<8) + 3, CONTROL_CYCLE_START_PIN);
+//                         values[1] bit 3
+
+  mapper.bindBit(inputPort,(1<<8) + 2, CONTROL_FEED_HOLD_PIN);
+
+  mapper.bindFunction(jogKeyboard,desiredFunction);
+
+*/
+
+/*
+  #define USER_DIGITAL_PIN_0 ELEMENT_BIT_IDENTIFY_2
+  mapper.bindBit(outputPort,(1<<8) + 2, COOLANT_MIST_PIN);
+//                          values[1] bit 2
+*/
 }
 
 /*
@@ -65,10 +95,10 @@ void display_init() {}
 /*
   limitsCheckTravel() is called to check soft limits
   It returns true if the motion is outside the limit values
+*/
 bool limitsCheckTravel() {
     return false;
 }
-*/
 
 /*
   user_defined_homing(uint8_t cycle_mask) is called at the begining of the normal Grbl_ESP32 homing
@@ -76,11 +106,11 @@ bool limitsCheckTravel() {
   homing is skipped if it returns false, other normal homing continues.  For
   example, if you need to manually prep the machine for homing, you could implement
   user_defined_homing(uint8_t cycle_mask) to wait for some button to be pressed, then return true.
+*/
 bool user_defined_homing(uint8_t cycle_mask) {
     // True = done with homing, false = continue with normal Grbl_ESP32 homing
     return true;
 }
-*/
 
 /*
   Inverse Kinematics converts X,Y,Z cartesian coordinate to the steps
@@ -97,37 +127,37 @@ bool user_defined_homing(uint8_t cycle_mask) {
     target = an N_AXIS array of target positions (where the move is supposed to go)
     pl_data = planner data (see the definition of this type to see what it is)
     position = an N_AXIS array of where the machine is starting from for this move
+*/
 bool cartesian_to_motors(float* target, plan_line_data_t* pl_data, float* position) {
     // this simply moves to the target. Replace with your kinematics.
     return mc_line(target, pl_data);
 }
-*/
 
 /*
   kinematics_pre_homing() is called before normal homing
   You can use it to do special homing or just to set stuff up
 
   cycle_mask is a bit mask of the axes being homed this time.
+*/
 bool kinematics_pre_homing(uint8_t cycle_mask) {
     return false;  // finish normal homing cycle
 }
-*/
 
 /*
   kinematics_post_homing() is called at the end of normal homing
-void kinematics_post_homing() {}
 */
+void kinematics_post_homing() {}
 
 /*
   The status command uses motors_to_cartesian() to convert
   your motor positions to cartesian X,Y,Z... coordinates.
 
   Convert the N_AXIS array of motor positions to cartesian in your code.
+*/
 void motors_to_cartesian(float* cartesian, float* motors, int n_axis) {
     // position[X_AXIS] =
     // position[Y_AXIS] =
 }
-*/
 
 /*
   user_tool_change() is called when tool change gcode is received,
@@ -139,48 +169,7 @@ void user_tool_change(uint8_t new_tool) {}
   options.  user_defined_macro() is called with the button number to
   perform whatever actions you choose.
 */
-void codeSend(std::string code){
-	gc_execute_line(&code.front(),CLIENT_SERIAL);	
-}
-void user_defined_macro(uint8_t index) {
-	char msg[30] = "Macro  \n";
-	msg[6] = index + '0';
-	client_write(CLIENT_SERIAL,msg);
-	uint16_t waitTime = 0;
-	const std::vector<std::pair<uint8_t,uint8_t>> list{
-		{USER_DIGITAL_INPUT_PIN_0,SELECT_TIMER_0},
-		{USER_DIGITAL_INPUT_PIN_1,SELECT_TIMER_1},
-		{USER_DIGITAL_INPUT_PIN_2,SELECT_TIMER_2},
-		{USER_DIGITAL_INPUT_PIN_3,SELECT_TIMER_3}};
-	for(auto pinnPower: list){
-		waitTime += pinnPower.second*(digitalRead(pinnPower.first)^1);
-		if(waitTime) break;
-	}
-	strcpy(msg,"1° \n");
-	msg[3] = waitTime + '0';
-	client_write(CLIENT_SERIAL,msg);
-	sys.state = State::Idle;
-	protocol_execute_realtime();
-
-	codeSend("M3S800");
-	codeSend("M62P0");
-	client_write(CLIENT_SERIAL,"Wait!\n");
-	vTaskDelay(pdMS_TO_TICKS(waitTime*1000));
-	client_write(CLIENT_SERIAL,"Go!\n");
-	codeSend("M4S3500");
-	vTaskDelay(pdMS_TO_TICKS(int(INVERT_ROTATION_PERIOD*1000)));
-	codeSend("M62P1");
-	vTaskDelay(pdMS_TO_TICKS(300));
-
-	client_write(CLIENT_SERIAL,"Encoder!\n");
-	while((millis()-lastEncoderChange)<=ENCODER_TL){
-		vTaskDelay(pdMS_TO_TICKS(100));
-	}
-	client_write(CLIENT_SERIAL,"End!\n");
-	vTaskDelay(pdMS_TO_TICKS(int(END_OPERATION_PERIOD*1000)));
-	sys_digital_all_off();
-	codeSend("M5");
-}
+void user_defined_macro(uint8_t index) {}
 
 /*
   user_m30() is called when an M30 gcode signals the end of a gcode file.
@@ -190,4 +179,3 @@ void user_m30() {}
 // If you add any additional functions specific to your machine that
 // require calls from common code, guard their calls in the common code with
 // #ifdef USE_WHATEVER and add function prototypes (also guarded) to grbl.h
-//

@@ -91,6 +91,10 @@ const char* const GRBL_VERSION_BUILD = "20210816";
 
 #include "I2SOut.h"
 
+#ifdef ENABLE_I2C_PORT
+#include "I2C.h"
+#endif
+
 void grbl_init();
 void run_once();
 

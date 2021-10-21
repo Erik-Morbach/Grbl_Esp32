@@ -12,7 +12,7 @@
 
 // !!! For actual use, change the line above to select a board
 // from Machines/, for example:
-#include "Machines/stramosk_bjm.h"
+#include "Machines/bjm/stramosk_bjm.h"
 
 // === OEM Single File Configuration Option
 // OEMs that wish to publish source code that is configured for a

@@ -28,6 +28,10 @@ void IRAM_ATTR digitalWrite(uint8_t pin, uint8_t val) {
 #ifdef USE_I2S_OUT
     i2s_out_write(pin - I2S_OUT_PIN_BASE, val);
 #endif
+
+#ifdef ENABLE_I2C_PORT
+    I2C::Mapper::getInstance().write(pin,val);
+#endif
 }
 
 void IRAM_ATTR pinMode(uint8_t pin, uint8_t mode) {
@@ -48,6 +52,9 @@ int IRAM_ATTR digitalRead(uint8_t pin) {
     if (pin < I2S_OUT_PIN_BASE) {
         return __digitalRead(pin);
     }
+#ifdef ENABLE_I2C_PORT
+    return I2C::Mapper::getInstance().read(pin);
+#endif
 #ifdef USE_I2S_OUT
     return i2s_out_read(pin - I2S_OUT_PIN_BASE);
 #else

@@ -66,6 +66,8 @@ FlagSetting* bjm_velocity_selector;
 
 FlagSetting* report_inputs;
 
+FlagSetting* fo_ro_dependent;
+
 enum_opt_t spindleTypes = {
     // clang-format off
     { "NONE", int8_t(SpindleType::NONE) },
@@ -427,4 +429,6 @@ void make_settings() {
     bjm_velocity_selector = new FlagSetting(NULL, EXTENDED,WG, NULL, "Bjm/EnableVelocitySelector", DEFAULT_VELOCITY_SELECTOR,NULL);
 
     report_inputs = new FlagSetting(NULL, EXTENDED, WG, NULL, "Report/InputState", DEFAULT_REPORT_INPUTS,NULL);
+
+    fo_ro_dependent = new FlagSetting(NULL, EXTENDED, WG, NULL, "Bjm/feedOverrideRapidDependent", DEFAULT_FO_RO_DEPENDENT, NULL);
 }
