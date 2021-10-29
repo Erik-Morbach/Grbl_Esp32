@@ -449,6 +449,10 @@ void make_grbl_commands() {
     new GrblCommand("H", "Home", home_all, idleOrAlarm);
     new GrblCommand("MD", "Motor/Disable", motor_disable, idleOrAlarm);
 
+#ifdef ENABLE_SD_CARD
+    new GrblCommand("CAT", "SD/Append", appendToFileCommand,anyState);
+#endif
+
 #ifdef HOMING_SINGLE_AXIS_COMMANDS
     new GrblCommand("HX", "Home/X", home_x, idleOrAlarm);
     new GrblCommand("HY", "Home/Y", home_y, idleOrAlarm);

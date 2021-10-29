@@ -129,6 +129,7 @@ uint32_t sd_get_current_line_number() {
 
 SDState sd_state = SDState::Idle;
 
+
 SDState get_sd_state(bool refresh) {
     if (SDCARD_DET_PIN != UNDEFINED_PIN) {
         if (digitalRead(SDCARD_DET_PIN) != SDCARD_DET_VAL) {
@@ -170,5 +171,56 @@ void sd_get_current_filename(char* name) {
     } else {
         name[0] = 0;
     }
+}
+
+
+void appendToFile(const char *fileName, const char *line){
+    if(!SD.begin(5) || sd_state!=SDState::Idle){
+        client_write(CLIENT_SERIAL, "[MSG: SD Error]\r\n"); 
+        return;
+    } 
+    //client_write(CLIENT_SERIAL, "Writing\n"); 
+    set_sd_state(SDState::BusyUploading);
+    File writeFile;
+    if(!SD.exists(fileName)) writeFile = SD.open(fileName,FILE_WRITE);
+    else writeFile = SD.open(fileName,FILE_APPEND);
+
+    int actualWrite = writeFile.println(line);
+
+    /*char debugString[100];
+    sprintf(debugString,"Writing to file %s with mode %d error %d line=%s\n",fileName,SD.exists(fileName),writeFile.getWriteError(),line);
+    client_write(CLIENT_SERIAL, debugString); 
+    //int actualWrite = writeFile.write((uint8_t*)line,strlen(line));
+    sprintf(debugString,"Writed %d bytes\n",actualWrite);
+    client_write(CLIENT_SERIAL, debugString); 
+    */
+
+    writeFile.close();
+    set_sd_state(SDState::Idle);
+}
+
+Error appendToFileCommand(const char* value, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream){
+    if(!value) return Error::InvalidValue;
+    int valueLen = strlen(value);
+    if(valueLen<3) return Error::InvalidValue;
+
+    char filePath[valueLen];
+    char line[valueLen];
+
+    int indexOfSeparator = -1;
+    for(int valueIndex = 1;valueIndex<valueLen;++valueIndex){
+        if(value[valueIndex]==value[valueIndex+1] && value[valueIndex]=='<'){
+            indexOfSeparator = valueIndex;
+            break;
+        }
+    }
+    strncpy(filePath,value,indexOfSeparator);
+    filePath[indexOfSeparator]='\0';
+    strcpy(line,value+indexOfSeparator+2);
+    char debugString[200];
+    sprintf(debugString, "%s << %s\n",filePath,line);
+    client_write(CLIENT_SERIAL,debugString);
+    appendToFile(filePath,line);
+    return Error::Ok;
 }
 #endif  //ENABLE_SD_CARD
