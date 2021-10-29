@@ -21,9 +21,13 @@
 */
 
 #include "../Config.h"
-
+#ifdef ENABLE_ETHERNET
+#include <EthernetENC.h>
+#else
 class WiFiServer;
 class WiFiClient;
+#endif
+
 
 namespace WebUI {
     class Telnet_Server {
@@ -53,8 +57,13 @@ namespace WebUI {
 
     private:
         static bool        _setupdone;
+#ifdef ENABLE_ETHERNET
+        static EthernetServer* _telnetserver;
+        static EthernetClient  _telnetClients[MAX_TLNT_CLIENTS];
+#else 
         static WiFiServer* _telnetserver;
         static WiFiClient  _telnetClients[MAX_TLNT_CLIENTS];
+#endif
 #ifdef ENABLE_TELNET_WELCOME_MSG
         static IPAddress _telnetClientsIP[MAX_TLNT_CLIENTS];
 #endif

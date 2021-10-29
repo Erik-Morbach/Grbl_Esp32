@@ -19,21 +19,30 @@
 */
 
 #include "../Grbl.h"
-
-#if defined(ENABLE_WIFI) && defined(ENABLE_TELNET)
-
+#if defined(ENABLE_TELNET) && (defined(ENABLE_WIFI) || defined(ENABLE_ETHERNET))
+#ifdef ENABLE_WIFI
 #    include "WifiServices.h"
-
 #    include "TelnetServer.h"
 #    include "WifiConfig.h"
 #    include <WiFi.h>
+#endif
+#ifdef ENABLE_ETHERNET
+#    include <EthernetENC.h>
+#    include "WebSettings.h"
+
+#endif
 
 namespace WebUI {
     Telnet_Server telnet_server;
     bool          Telnet_Server::_setupdone    = false;
     uint16_t      Telnet_Server::_port         = 0;
+#ifdef ENABLE_ETHERNET
+    EthernetServer*   Telnet_Server::_telnetserver = NULL;
+    EthernetClient    Telnet_Server::_telnetClients[MAX_TLNT_CLIENTS];
+#else
     WiFiServer*   Telnet_Server::_telnetserver = NULL;
     WiFiClient    Telnet_Server::_telnetClients[MAX_TLNT_CLIENTS];
+#endif
 
 #    ifdef ENABLE_TELNET_WELCOME_MSG
     IPAddress Telnet_Server::_telnetClientsIP[MAX_TLNT_CLIENTS];
@@ -49,17 +58,22 @@ namespace WebUI {
         end();
         _RXbufferSize = 0;
         _RXbufferpos  = 0;
-
         if (telnet_enable->get() == 0) {
             return false;
         }
         _port = telnet_port->get();
 
         //create instance
-        _telnetserver = new WiFiServer(_port, MAX_TLNT_CLIENTS);
-        _telnetserver->setNoDelay(true);
-        String s = "[MSG:TELNET Started " + String(_port) + "]\r\n";
+    #ifdef ENABLE_ETHERNET
+        _telnetserver = new EthernetServer(_port);//, MAX_TLNT_CLIENTS);
+        String s = "[MSG:TELNET Started " + (Ethernet.localIP().toString()) + ":" + String(_port) + "]\r\n";
         grbl_send(CLIENT_ALL, (char*)s.c_str());
+    #else
+        _telnetserver = new WiFiServer(_port, MAX_TLNT_CLIENTS);
+        String s = "[MSG:TELNET Started " + (WiFi.localIP().toString()) + ":" + String(_port) + "]\r\n";
+        grbl_send(CLIENT_ALL, (char*)s.c_str());
+        _telnetserver->setNoDelay(true);
+    #endif
         //start telnet server
         _telnetserver->begin();
         _setupdone = true;
@@ -78,7 +92,15 @@ namespace WebUI {
 
     void Telnet_Server::clearClients() {
         //check if there are any new clients
-        if (_telnetserver->hasClient()) {
+        #ifdef ENABLE_ETHERNET
+        EthernetClient newClient = _telnetserver->accept();
+        #else
+        WiFiClient newClient = _telnetserver->available();
+        #endif
+        if (newClient.connected()) {
+            String remp = "RemoteIp new Client = " + newClient.remoteIP().toString() + " connected = "+ (newClient.connected()?"1":"0") +" \n";
+            grbl_send(CLIENT_SERIAL,(char*)remp.c_str());
+            newClient.println("COnnecting");
             uint8_t i;
             for (i = 0; i < MAX_TLNT_CLIENTS; i++) {
                 //find free/disconnected spot
@@ -89,13 +111,13 @@ namespace WebUI {
                     if (_telnetClients[i]) {
                         _telnetClients[i].stop();
                     }
-                    _telnetClients[i] = _telnetserver->available();
+                    _telnetClients[i] = newClient;
                     break;
                 }
             }
             if (i >= MAX_TLNT_CLIENTS) {
                 //no free/disconnected spot so reject
-                _telnetserver->available().stop();
+                newClient.stop();
             }
         }
     }

@@ -89,6 +89,14 @@ const char* const GRBL_VERSION_BUILD = "20211016";
 #    endif
 #endif
 
+#ifdef ENABLE_ETHERNET
+#   include "WebUI/EthernetConfig.h"
+#   ifdef ENABLE_TELNET
+#        include "WebUI/TelnetServer.h"
+#   endif 
+#endif
+
+
 #include "I2SOut.h"
 
 #ifdef ENABLE_I2C_PORT

@@ -30,11 +30,15 @@
 
 #include "ESPResponse.h"
 #include "WebServer.h"
+#include "WifiConfig.h"
+#ifdef ENABLE_ETHERNET
+#   include "EthernetConfig.h"
+#endif
 #include <string.h>
 
 namespace WebUI {
 
-#ifdef ENABLE_WIFI
+#if defined(ENABLE_WIFI) || defined(ENABLE_ETHERNET) 
     StringSetting* wifi_sta_ssid;
     StringSetting* wifi_sta_password;
 
@@ -1159,10 +1163,12 @@ namespace WebUI {
         wifi_radio_mode = new EnumSetting("Radio mode", WEBSET, WA, "ESP110", "Radio/Mode", DEFAULT_RADIO_MODE, &radioEnabledOptions, NULL);
 #endif
 
-#ifdef ENABLE_WIFI
+#if (defined(ENABLE_WIFI) || defined(ENABLE_ETHERNET)) && defined(ENABLE_TELNET)
         telnet_port = new IntSetting(
             "Telnet Port", WEBSET, WA, "ESP131", "Telnet/Port", DEFAULT_TELNETSERVER_PORT, MIN_TELNET_PORT, MAX_TELNET_PORT, NULL);
         telnet_enable = new EnumSetting("Telnet Enable", WEBSET, WA, "ESP130", "Telnet/Enable", DEFAULT_TELNET_STATE, &onoffOptions, NULL);
+#endif
+#ifdef ENABLE_WIFI
         http_port =
             new IntSetting("HTTP Port", WEBSET, WA, "ESP121", "Http/Port", DEFAULT_WEBSERVER_PORT, MIN_HTTP_PORT, MAX_HTTP_PORT, NULL);
         http_enable   = new EnumSetting("HTTP Enable", WEBSET, WA, "ESP120", "Http/Enable", DEFAULT_HTTP_STATE, &onoffOptions, NULL);

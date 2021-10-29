@@ -67,6 +67,9 @@ void grbl_init() {
 #ifdef ENABLE_WIFI
     WebUI::wifi_config.begin();
 #endif
+#ifdef ENABLE_ETHERNET
+    WebUI::ethernet_config.begin();
+#endif
 #ifdef ENABLE_BLUETOOTH
     WebUI::bt_config.begin();
 #endif

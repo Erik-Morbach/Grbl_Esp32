@@ -54,6 +54,7 @@ namespace WebUI {
     static const char* DEFAULT_AP_SSID           = "GRBL_ESP";
     static const char* DEFAULT_AP_PWD            = "12345678";
     static const char* DEFAULT_AP_IP             = "192.168.0.1";
+    static const char* DEFAULT_ET_IP             = "192.168.1.1";
     static const char* DEFAULT_AP_MK             = "255.255.255.0";
     static const int   DEFAULT_AP_CHANNEL        = 1;
     static const int   DEFAULT_WEBSERVER_PORT    = 80;
@@ -83,6 +84,8 @@ namespace WebUI {
     static const int MIN_NOTIFICATION_TOKEN_LENGTH   = 0;
     static const int MAX_NOTIFICATION_TOKEN_LENGTH   = 63;
     static const int MAX_NOTIFICATION_SETTING_LENGTH = 127;
+
+
 
     class WiFiConfig {
     public:

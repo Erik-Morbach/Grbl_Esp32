@@ -113,7 +113,7 @@ namespace WebUI {
 #    ifdef ENABLE_HTTP
         web_server.begin();
 #    endif
-#    ifdef ENABLE_TELNET
+#    if defined(ENABLE_TELNET) && !defined(ENABLE_ETHERNET)
         telnet_server.begin();
 #    endif
 #    ifdef ENABLE_NOTIFICATIONS

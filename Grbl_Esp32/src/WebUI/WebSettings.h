@@ -24,7 +24,7 @@ namespace WebUI {
     extern StringSetting* wifi_sta_ssid;
     extern StringSetting* wifi_sta_password;
 
-#ifdef ENABLE_WIFI
+#if defined(ENABLE_WIFI) || defined(ENABLE_ETHERNET)
     extern EnumSetting*   wifi_sta_mode;
     extern IPaddrSetting* wifi_sta_ip;
     extern IPaddrSetting* wifi_sta_gateway;
