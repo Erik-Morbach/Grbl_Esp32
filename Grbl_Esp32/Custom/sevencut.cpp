@@ -40,6 +40,7 @@ Below are all the current weak function
 */
 #include "src/Grbl.h"
 volatile unsigned long lastEncoderChange;
+SemaphoreHandle_t macroMutex;
 void IRAM_ATTR encoderRead(){
 	lastEncoderChange = millis();	
 }
@@ -55,6 +56,7 @@ void machine_init() {
 	attachInterrupt(digitalPinToInterrupt(ENCODER_INPUT),encoderRead,CHANGE);
 	lastEncoderChange = millis();
 	client_write(CLIENT_SERIAL,"SEVENCUT INIT\n");
+	macroMutex = xSemaphoreCreateMutex();
 }
 
 /*
@@ -142,12 +144,27 @@ void user_tool_change(uint8_t new_tool) {}
 void codeSend(std::string code){
 	gc_execute_line(&code.front(),CLIENT_SERIAL);	
 }
+bool checkSystem(){
+	protocol_execute_realtime();
+	if(sys.state==State::Alarm){
+		String tmp = "Reset!\n";
+		client_write(CLIENT_SERIAL,(char*)tmp.c_str());
+		return true;
+	}
+	return false;
+}
+void endProcess(){
+	codeSend("M5");
+	sys_digital_all_off();
+	xSemaphoreGive(macroMutex);
+}
 void user_defined_macro(uint8_t index) {
+	if(xSemaphoreTake(macroMutex,0)!=pdTRUE) return;
 	char msg[30] = "Macro  \n";
 	msg[6] = index + '0';
 	client_write(CLIENT_SERIAL,msg);
 	uint16_t waitTime = 0;
-	const std::vector<std::pair<uint8_t,uint8_t>> list{
+	const std::vector<std::pair<uint8_t,uint16_t>> list{
 		{USER_DIGITAL_INPUT_PIN_0,SELECT_TIMER_0},
 		{USER_DIGITAL_INPUT_PIN_1,SELECT_TIMER_1},
 		{USER_DIGITAL_INPUT_PIN_2,SELECT_TIMER_2},
@@ -156,30 +173,41 @@ void user_defined_macro(uint8_t index) {
 		waitTime += pinnPower.second*(digitalRead(pinnPower.first)^1);
 		if(waitTime) break;
 	}
-	strcpy(msg,"1° \n");
-	msg[3] = waitTime + '0';
+
+	sprintf(msg, "1° %d\n",waitTime);
 	client_write(CLIENT_SERIAL,msg);
 	sys.state = State::Idle;
-	protocol_execute_realtime();
 
+	if(checkSystem()) {
+		endProcess();
+		return;
+	}
 	codeSend("M3S800");
 	codeSend("M62P0");
 	client_write(CLIENT_SERIAL,"Wait!\n");
-	vTaskDelay(pdMS_TO_TICKS(waitTime*1000));
+	vTaskDelay(pdMS_TO_TICKS(waitTime));
 	client_write(CLIENT_SERIAL,"Go!\n");
 	codeSend("M4S3500");
-	vTaskDelay(pdMS_TO_TICKS(int(INVERT_ROTATION_PERIOD*1000)));
+	vTaskDelay(pdMS_TO_TICKS(INVERT_ROTATION_PERIOD));
 	codeSend("M62P1");
+	if(checkSystem()) {
+		endProcess();
+		return;
+	}
 	vTaskDelay(pdMS_TO_TICKS(300));
 
 	client_write(CLIENT_SERIAL,"Encoder!\n");
 	while((millis()-lastEncoderChange)<=ENCODER_TL){
+		if(checkSystem()) {
+			endProcess();
+			return;
+		}
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 	client_write(CLIENT_SERIAL,"End!\n");
-	vTaskDelay(pdMS_TO_TICKS(int(END_OPERATION_PERIOD*1000)));
-	sys_digital_all_off();
-	codeSend("M5");
+	vTaskDelay(pdMS_TO_TICKS(END_OPERATION_PERIOD));
+
+	endProcess();
 }
 
 /*

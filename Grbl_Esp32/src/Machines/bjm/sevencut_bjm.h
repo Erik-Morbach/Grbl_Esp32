@@ -34,9 +34,9 @@
 #define SPINDLE_TYPE            SpindleType::PWM // only one spindle at a time
 #define SPINDLE_DIR_PIN 	GPIO_NUM_15
 #define SPINDLE_OUTPUT_PIN      GPIO_NUM_25
+
 #define SPINDLE_CW_PIN	 	GPIO_NUM_22
 #define SPINDLE_CCW_PIN		GPIO_NUM_26
-
 
 #define USER_DIGITAL_PIN_0 GPIO_NUM_15
 #define USER_DIGITAL_PIN_1 GPIO_NUM_2
@@ -46,19 +46,19 @@
 #define USER_DIGITAL_INPUT_PIN_2  GPIO_NUM_27
 #define USER_DIGITAL_INPUT_PIN_3  GPIO_NUM_13
 
-#define SELECT_TIMER_0 		  2
-#define SELECT_TIMER_1		  3
-#define SELECT_TIMER_2		  4
-#define SELECT_TIMER_3		  5
+#define SELECT_TIMER_0 		  2000 // ms
+#define SELECT_TIMER_1		  3000 // ms
+#define SELECT_TIMER_2		  4000 // ms
+#define SELECT_TIMER_3		  5000 // ms
 
-#define INVERT_ROTATION_PERIOD	  2
+#define INVERT_ROTATION_PERIOD	  2000 // ms
 
-#define END_OPERATION_PERIOD	  2.25
+#define END_OPERATION_PERIOD	  2250 // ms
 
-#define ENCODER_TL 		  750
+#define ENCODER_TL 		  750 // ms
 #define ENCODER_INPUT             GPIO_NUM_34
 #define MACRO_BUTTON_0_PIN 	  GPIO_NUM_35
-#define MACRO_BUTTON_1_PIN	  GPIO_NUM_36
+#define CONTROL_RESET_PIN       GPIO_NUM_21
 
 #define CUSTOM_CODE_FILENAME "Custom/sevencut.cpp"
 
