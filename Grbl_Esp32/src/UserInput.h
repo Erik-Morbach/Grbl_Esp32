@@ -27,7 +27,7 @@ namespace UserInput{
 	class DigitalInput {
 		public:
 			DigitalInput();
-			DigitalInput(uint8_t number, uint8_t pin);
+			DigitalInput(uint8_t number, uint8_t pin, bool invert=false);
 
 			bool get();
 		protected:

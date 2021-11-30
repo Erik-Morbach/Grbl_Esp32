@@ -100,13 +100,13 @@ const int MAX_N_AXIS = 6;
 
 #define ENABLE_SD_CARD  // enable use of SD Card to run jobs
 
-//#define ENABLE_WIFI  //enable wifi
+#define ENABLE_WIFI  //enable wifi
 
 #if defined(ENABLE_WIFI) || defined(ENABLE_BLUETOOTH)
 #    define WIFI_OR_BLUETOOTH
 #endif
 
-//#define ENABLE_HTTP                //enable HTTP and all related services
+#define ENABLE_HTTP                //enable HTTP and all related services
 //#define ENABLE_OTA                 //enable OTA
 //#define ENABLE_TELNET              //enable telnet
 //#define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
@@ -152,7 +152,7 @@ const int ESP_BT        = 3;
 #    ifdef CONNECT_TO_SSID
 const int DEFAULT_RADIO_MODE = ESP_WIFI_STA;
 #    else
-const int DEFAULT_RADIO_MODE = ESP_BT;
+const int DEFAULT_RADIO_MODE = ESP_WIFI_AP;
 #    endif  //CONNECT_TO_SSID
 #else
 #    undef ENABLE_NOTIFICATIONS
@@ -518,9 +518,9 @@ const int DEBOUNCE_PERIOD = 50;  // in milliseconds default 32 microseconds
 
 // Enable the '$RST=*', '$RST=$', and '$RST=#' eeprom restore commands. There are cases where
 // these commands may be undesirable. Simply comment the desired macro to disable it.
-#define ENABLE_RESTORE_WIPE_ALL          // '$RST=*' Default enabled. Comment to disable.
+//#define ENABLE_RESTORE_WIPE_ALL          // '$RST=*' Default enabled. Comment to disable.
 #define ENABLE_RESTORE_DEFAULT_SETTINGS  // '$RST=$' Default enabled. Comment to disable.
-#define ENABLE_RESTORE_CLEAR_PARAMETERS  // '$RST=#' Default enabled. Comment to disable.
+//#define ENABLE_RESTORE_CLEAR_PARAMETERS  // '$RST=#' Default enabled. Comment to disable.
 
 // Additional settings have been added to the original set that you see with the $$ command
 // Some senders may not be able to parse anything different from the original set
@@ -565,7 +565,7 @@ const int DEBOUNCE_PERIOD = 50;  // in milliseconds default 32 microseconds
 // Restoring to the resume position follows these set motions in reverse: fast restore to
 // pull-out position, power-up with a time-out, and plunge back to the original position at the
 // slower pull-out rate.
-#define PARKING_ENABLE  // Default disabled. Uncomment to enable
+//#define PARKING_ENABLE  // Default disabled. Uncomment to enable
 
 // Configure options for the parking motion, if enabled.
 #define PARKING_AXIS Z_AXIS                      // Define which axis that performs the parking motion

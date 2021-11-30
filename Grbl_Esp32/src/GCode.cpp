@@ -517,6 +517,20 @@ Error gc_execute_line(char* line, uint8_t client) {
                         }
                         mg_word_bit = ModalGroup::MM8;
                         break;
+#ifdef ENABLE_SD_CARD
+                    case 47:
+                    case 48:
+                        switch(int_value){
+                            case 47:
+                                gc_block.modal.program_flow = ProgramFlow::RepeatAlways;
+                                break;
+                            case 48:
+                                gc_block.modal.program_flow = ProgramFlow::RepeatTimes;
+                                break;
+                        }
+                        mg_word_bit = ModalGroup::MM4;
+                        break;
+#endif
 #ifdef ENABLE_PARKING_OVERRIDE_CONTROL
                     case 56:
                         gc_block.modal.override = Override::ParkingMotion;
@@ -831,6 +845,11 @@ Error gc_execute_line(char* line, uint8_t client) {
         }
         bit_false(value_words, bit(GCodeWord::E));
         bit_false(value_words, bit(GCodeWord::Q));
+    }
+    if (gc_block.modal.program_flow == ProgramFlow::RepeatTimes){
+        if (bit_isfalse(value_words,bit(GCodeWord::P))){
+            FAIL(Error::GcodeValueWordMissing);
+        }
     }
     // [11. Set active plane ]: N/A
     switch (gc_block.modal.plane_select) {
@@ -1259,6 +1278,9 @@ Error gc_execute_line(char* line, uint8_t client) {
                   (bit(GCodeWord::X) | bit(GCodeWord::Y) | bit(GCodeWord::Z) | bit(GCodeWord::A) | bit(GCodeWord::B) |
                    bit(GCodeWord::C)));  // Remove axis words.
     }
+    if (gc_block.modal.program_flow==ProgramFlow::RepeatAlways || gc_block.modal.program_flow==ProgramFlow::RepeatTimes)
+        bit_false(value_words, bit(GCodeWord::P));
+
     if (value_words) {
         FAIL(Error::GcodeUnusedWords);  // [Unused words]
     }
@@ -1567,6 +1589,13 @@ Error gc_execute_line(char* line, uint8_t client) {
                 protocol_execute_realtime();            // Execute suspend.
             }
             break;
+        case ProgramFlow::RepeatTimes:
+            gc_state.times_repeat += 1;
+            if(gc_state.times_repeat>=gc_block.values.p){
+                gc_state.times_repeat = 0;
+                gc_state.modal.program_flow = ProgramFlow::CompletedM30;
+            }
+        case ProgramFlow::RepeatAlways:
         case ProgramFlow::CompletedM2:
         case ProgramFlow::CompletedM30:
             protocol_buffer_synchronize();  // Sync and finish all remaining buffered motions before moving on.
@@ -1597,6 +1626,11 @@ Error gc_execute_line(char* line, uint8_t client) {
             sys.spindle_speed_ovr = SpindleSpeedOverride::Default;
 #endif
             // Execute coordinate change and spindle/coolant stop.
+            if (gc_state.modal.program_flow==ProgramFlow::RepeatAlways ||
+                gc_state.modal.program_flow==ProgramFlow::RepeatTimes){
+                sys.programWillRepeat = true;
+                break;
+            }
             if (sys.state != State::CheckMode) {
                 coords[gc_state.modal.coord_select]->get(gc_state.coord_system);
                 system_flag_wco_change();  // Set to refresh immediately just in case something altered.

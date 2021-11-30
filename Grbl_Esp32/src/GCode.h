@@ -43,7 +43,7 @@ enum class ModalGroup : uint8_t {
     MG8  = 8,   // [G43.1,G49] Tool length offset
     MG12 = 9,   // [G54,G55,G56,G57,G58,G59] Coordinate system selection
     MG13 = 10,  // [G61] Control mode
-    MM4  = 11,  // [M0,M1,M2,M30] Stopping
+    MM4  = 11,  // [M0,M1,M2,M30,M47,M48] Stopping
     MM6  = 14,  // [M6] Tool change
     MM7  = 12,  // [M3,M4,M5] Spindle turning
     MM8  = 13,  // [M7,M8,M9] Coolant control
@@ -112,6 +112,8 @@ enum class ProgramFlow : uint8_t {
     OptionalStop = 1,   // M1 NOTE: Not supported, but valid and ignored.
     CompletedM2  = 2,   // M2 (Do not alter value)
     CompletedM30 = 30,  // M30 (Do not alter value)
+    RepeatAlways = 47,   //M47
+    RepeatTimes  = 48,   //M48
 };
 
 // Modal Group G5: Feed rate mode
@@ -174,7 +176,7 @@ enum class IoControl : uint8_t {
     SetAnalogImmediate  = 6,  // M68
 };
 
-static const int MaxUserDigitalPin = 4;
+static const int MaxUserDigitalPin = 7;
 
 // Modal Group G8: Tool length offset
 enum class ToolLengthOffset : uint8_t {
@@ -270,7 +272,7 @@ typedef struct {
     ToolLengthOffset tool_length;   // {G43.1,G49}
     CoordIndex       coord_select;  // {G54,G55,G56,G57,G58,G59}
     // uint8_t control;      // {G61} NOTE: Don't track. Only default supported.
-    ProgramFlow  program_flow;  // {M0,M1,M2,M30}
+    ProgramFlow  program_flow;  // {M0,M1,M2,M30,M47,M48}
     CoolantState coolant;       // {M7,M8,M9}
     SpindleState spindle;       // {M3,M4,M5}
     ToolChange   tool_change;   // {M6}
@@ -299,6 +301,7 @@ typedef struct {
     float   feed_rate;      // Millimeters/min
     uint8_t tool;           // Tracks tool number. NOT USED.
     int32_t line_number;    // Last line number sent
+    uint32_t times_repeat;  // M48 Times already repeated
 
     float position[MAX_N_AXIS];  // Where the interpreter considers the tool to be at this point in the code
 

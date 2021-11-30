@@ -644,6 +644,18 @@
 #    define USER_DIGITAL_PIN_3 UNDEFINED_PIN
 #endif
 
+#ifndef USER_DIGITAL_PIN_4
+#    define USER_DIGITAL_PIN_4 UNDEFINED_PIN
+#endif
+
+#ifndef USER_DIGITAL_PIN_5
+#    define USER_DIGITAL_PIN_5 UNDEFINED_PIN
+#endif
+
+#ifndef USER_DIGITAL_PIN_6
+#    define USER_DIGITAL_PIN_6 UNDEFINED_PIN
+#endif
+
 #ifndef USER_DIGITAL_INPUT_PIN_0
 #    define USER_DIGITAL_INPUT_PIN_0 UNDEFINED_PIN
 #endif
@@ -658,6 +670,39 @@
 
 #ifndef USER_DIGITAL_INPUT_PIN_3
 #    define USER_DIGITAL_INPUT_PIN_3 UNDEFINED_PIN
+#endif
+#ifndef USER_DIGITAL_INPUT_PIN_4
+#    define USER_DIGITAL_INPUT_PIN_4 UNDEFINED_PIN
+#endif
+#ifndef USER_DIGITAL_INPUT_PIN_5
+#    define USER_DIGITAL_INPUT_PIN_5 UNDEFINED_PIN
+#endif
+#ifndef USER_DIGITAL_INPUT_PIN_6
+#    define USER_DIGITAL_INPUT_PIN_6 UNDEFINED_PIN
+#endif
+#ifndef USER_DIGITAL_INPUT_INVERT_0
+#    define USER_DIGITAL_INPUT_INVERT_0 0
+#endif
+
+#ifndef USER_DIGITAL_INPUT_INVERT_1
+#    define USER_DIGITAL_INPUT_INVERT_1 0
+#endif
+
+#ifndef USER_DIGITAL_INPUT_INVERT_2
+#    define USER_DIGITAL_INPUT_INVERT_2 0
+#endif
+
+#ifndef USER_DIGITAL_INPUT_INVERT_3
+#    define USER_DIGITAL_INPUT_INVERT_3 0
+#endif
+#ifndef USER_DIGITAL_INPUT_INVERT_4
+#    define USER_DIGITAL_INPUT_INVERT_4 0
+#endif
+#ifndef USER_DIGITAL_INPUT_INVERT_5
+#    define USER_DIGITAL_INPUT_INVERT_5 0
+#endif
+#ifndef USER_DIGITAL_INPUT_INVERT_6
+  #    define USER_DIGITAL_INPUT_INVERT_6 0
 #endif
 // ================ User Analog I/O ==============================
 
@@ -677,6 +722,18 @@
 #    define USER_ANALOG_PIN_3 UNDEFINED_PIN
 #endif
 
+#ifndef USER_ANALOG_PIN_4
+#    define USER_ANALOG_PIN_4 UNDEFINED_PIN
+#endif
+
+#ifndef USER_ANALOG_PIN_5
+#    define USER_ANALOG_PIN_5 UNDEFINED_PIN
+#endif
+
+#ifndef USER_ANALOG_PIN_6
+#    define USER_ANALOG_PIN_6 UNDEFINED_PIN
+#endif
+
 #ifndef PROBE_PIN
 #    define PROBE_PIN UNDEFINED_PIN
 #endif
@@ -692,6 +749,15 @@
 #endif
 #ifndef USER_ANALOG_PIN_3_FREQ
 #    define USER_ANALOG_PIN_3_FREQ 5000
+#endif
+#ifndef USER_ANALOG_PIN_4_FREQ
+#    define USER_ANALOG_PIN_4_FREQ 5000
+#endif
+#ifndef USER_ANALOG_PIN_5_FREQ
+#    define USER_ANALOG_PIN_5_FREQ 5000
+#endif
+#ifndef USER_ANALOG_PIN_6_FREQ
+#    define USER_ANALOG_PIN_6_FREQ 6000
 #endif
 
 #ifndef DEFAULT_USER_MACRO0

@@ -21,8 +21,8 @@
 namespace UserInput{
 	DigitalInput::DigitalInput(){}
 
-	DigitalInput::DigitalInput(uint8_t number, uint8_t pin):
-		_number(number), _pin(pin)
+	DigitalInput::DigitalInput(uint8_t number, uint8_t pin,bool invert):
+		_number(number), _pin(pin),_invert(invert)
 	{
 		if(this->_pin==UNDEFINED_PIN) 
 			return;
@@ -35,7 +35,7 @@ namespace UserInput{
 	}
 
 	void DigitalInput::init(){
-		pinMode(this->_pin,INPUT);
+		pinMode(this->_pin,INPUT_PULLDOWN);
 
 		this->config_message();
 	}

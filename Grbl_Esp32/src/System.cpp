@@ -110,11 +110,18 @@ void system_ini() {  // Renamed from system_init() due to conflict with esp32 fi
     myDigitalOutputs[1] = new UserOutput::DigitalOutput(1, USER_DIGITAL_PIN_1);
     myDigitalOutputs[2] = new UserOutput::DigitalOutput(2, USER_DIGITAL_PIN_2);
     myDigitalOutputs[3] = new UserOutput::DigitalOutput(3, USER_DIGITAL_PIN_3);
+    myDigitalOutputs[4] = new UserOutput::DigitalOutput(4, USER_DIGITAL_PIN_4);
+    myDigitalOutputs[5] = new UserOutput::DigitalOutput(5, USER_DIGITAL_PIN_5);
+    myDigitalOutputs[6] = new UserOutput::DigitalOutput(6, USER_DIGITAL_PIN_6);
 
-    myDigitalInputs[0] = new UserInput::DigitalInput(0, USER_DIGITAL_INPUT_PIN_0);
-    myDigitalInputs[1] = new UserInput::DigitalInput(1, USER_DIGITAL_INPUT_PIN_1);
-    myDigitalInputs[2] = new UserInput::DigitalInput(2, USER_DIGITAL_INPUT_PIN_2);
-    myDigitalInputs[3] = new UserInput::DigitalInput(3, USER_DIGITAL_INPUT_PIN_3);
+    myDigitalInputs[0] = new UserInput::DigitalInput(0, USER_DIGITAL_INPUT_PIN_0,USER_DIGITAL_INPUT_INVERT_0);
+    myDigitalInputs[1] = new UserInput::DigitalInput(1, USER_DIGITAL_INPUT_PIN_1,USER_DIGITAL_INPUT_INVERT_1);
+    myDigitalInputs[2] = new UserInput::DigitalInput(2, USER_DIGITAL_INPUT_PIN_2,USER_DIGITAL_INPUT_INVERT_2);
+    myDigitalInputs[3] = new UserInput::DigitalInput(3, USER_DIGITAL_INPUT_PIN_3,USER_DIGITAL_INPUT_INVERT_3);
+    myDigitalInputs[4] = new UserInput::DigitalInput(4, USER_DIGITAL_INPUT_PIN_4,USER_DIGITAL_INPUT_INVERT_4);
+    myDigitalInputs[5] = new UserInput::DigitalInput(5, USER_DIGITAL_INPUT_PIN_5,USER_DIGITAL_INPUT_INVERT_5);
+    myDigitalInputs[6] = new UserInput::DigitalInput(6, USER_DIGITAL_INPUT_PIN_6,USER_DIGITAL_INPUT_INVERT_6);
+
 
 
     // Setup M67 Pins
@@ -122,6 +129,9 @@ void system_ini() {  // Renamed from system_init() due to conflict with esp32 fi
     myAnalogOutputs[1] = new UserOutput::AnalogOutput(1, USER_ANALOG_PIN_1, USER_ANALOG_PIN_1_FREQ);
     myAnalogOutputs[2] = new UserOutput::AnalogOutput(2, USER_ANALOG_PIN_2, USER_ANALOG_PIN_2_FREQ);
     myAnalogOutputs[3] = new UserOutput::AnalogOutput(3, USER_ANALOG_PIN_3, USER_ANALOG_PIN_3_FREQ);
+    myAnalogOutputs[4] = new UserOutput::AnalogOutput(4, USER_ANALOG_PIN_4, USER_ANALOG_PIN_4_FREQ);
+    myAnalogOutputs[5] = new UserOutput::AnalogOutput(5, USER_ANALOG_PIN_5, USER_ANALOG_PIN_5_FREQ);
+    myAnalogOutputs[6] = new UserOutput::AnalogOutput(6, USER_ANALOG_PIN_6, USER_ANALOG_PIN_6_FREQ);
 }
 
 #ifdef ENABLE_CONTROL_SW_DEBOUNCE
@@ -236,6 +246,7 @@ ControlPins system_control_get_state() {
 #ifdef MACRO_BUTTON_0_PIN
     defined_pins.bit.macro0 = true;
     if (digitalRead(MACRO_BUTTON_0_PIN)) {
+        Serial.println("Macro0");
         pin_states.bit.macro0 = true;
     }
 #endif
@@ -275,6 +286,7 @@ void system_exec_control_pin(ControlPins pins) {
     } else if (pins.bit.safetyDoor) {
         sys_rt_exec_state.bit.safetyDoor = true;
     } else if (pins.bit.macro0) {
+        Serial.println("Executing user defined Macro0");
         user_defined_macro(0);  // function must be implemented by user
     } else if (pins.bit.macro1) {
         user_defined_macro(1);  // function must be implemented by user
@@ -312,7 +324,7 @@ bool sys_set_analog(uint8_t io_num, float percent) {
 
 uint8_t sys_get_digital_inputs(){
 	uint8_t state = 0;	
-	for(int input_number=0;input_number<=3;++input_number)
+	for(int input_number=0;input_number<MaxUserDigitalPin;++input_number)
 		state |= (myDigitalInputs[input_number]->get()<<input_number);	
 	return state;
 }

@@ -36,12 +36,22 @@
 #define DEFAULT_VELOCITY_SELECTOR false
 #define DEFAULT_FO_RO_DEPENDENT true
 
+// placa Nova
+#define X_STEP_PIN              GPIO_NUM_17
+#define X_DIRECTION_PIN         GPIO_NUM_14
+#define B_STEP_PIN              GPIO_NUM_16
+#define B_DIRECTION_PIN         GPIO_NUM_2
+#define Z_STEP_PIN              GPIO_NUM_15
+#define Z_DIRECTION_PIN         GPIO_NUM_4
+/*
+Placa Antiga
 #define X_STEP_PIN              GPIO_NUM_17
 #define X_DIRECTION_PIN         GPIO_NUM_27
 #define B_STEP_PIN              GPIO_NUM_16
 #define B_DIRECTION_PIN         GPIO_NUM_2
 #define Z_STEP_PIN              GPIO_NUM_15
 #define Z_DIRECTION_PIN         GPIO_NUM_4
+*/
 
 #define DEFAULT_X_STEPS_PER_MM 100
 #define DEFAULT_Z_STEPS_PER_MM 200

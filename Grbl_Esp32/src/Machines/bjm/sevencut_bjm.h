@@ -2,14 +2,10 @@
 // clang-format off
 
 /*
-    4axis_external_driver.h
-    Part of Grbl_ESP32
+    sevencut_bjm.h
+    Part of Grbl_ESP32:BJM
 
-    Pin assignments for the buildlog.net 4-axis external driver board
-    https://github.com/bdring/4_Axis_SPI_CNC
-
-    2018    - Bart Dring
-    2020    - Mitch Bradley
+    2021- Erik Morbach
 
     Grbl_ESP32 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -59,6 +55,17 @@
 #define ENCODER_INPUT             GPIO_NUM_34
 #define MACRO_BUTTON_0_PIN 	  GPIO_NUM_35
 #define CONTROL_RESET_PIN       GPIO_NUM_21
+#define USER_DIGITAL_INPUT_PIN_4  GPIO_NUM_21
+#define USER_DIGITAL_INPUT_PIN_5  GPIO_NUM_39
+#define USER_DIGITAL_INPUT_PIN_6  GPIO_NUM_36
+
+#ifdef INVERT_CONTROL_PIN_MASK
+#   undef INVERT_CONTROL_PIN_MASK
+#endif
+#define INVERT_CONTROL_PIN_MASK B00000010
+#define USER_DIGITAL_INPUT_INVERT_4 1
+#define USER_DIGITAL_INPUT_INVERT_5 1
+#define USER_DIGITAL_INPUT_INVERT_6 1
 
 #define CUSTOM_CODE_FILENAME "Custom/sevencut.cpp"
 

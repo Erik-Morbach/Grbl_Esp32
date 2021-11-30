@@ -144,10 +144,11 @@ void protocol_main_loop() {
                 SD_ready_next = false;
                 report_status_message(execute_line(fileLine, SD_client, SD_auth_level), SD_client);
             } else {
-                char temp[50];
-                sd_get_current_filename(temp);
-                grbl_notifyf("SD print done", "%s print is successful", temp);
-                closeFile();  // close file and clear SD ready/running flags
+                // When run ended, some routines have to be
+                // executed
+                sd_end_run();
+                // print SD ended message
+                // Repeat program if necessary
             }
         }
 #endif

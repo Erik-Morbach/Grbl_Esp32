@@ -41,6 +41,7 @@ Below are all the current weak function
 #include "src/Grbl.h"
 volatile unsigned long lastEncoderChange;
 SemaphoreHandle_t macroMutex;
+constexpr char tag[10] = "message";
 void IRAM_ATTR encoderRead(){
 	lastEncoderChange = millis();	
 }
@@ -49,14 +50,12 @@ This function is used as a one time setup for your machine.
 */
 void machine_init() {
 	pinMode(ENCODER_INPUT,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_0,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_1,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_2,INPUT);
-	pinMode(USER_DIGITAL_INPUT_PIN_3,INPUT);
 	attachInterrupt(digitalPinToInterrupt(ENCODER_INPUT),encoderRead,CHANGE);
 	lastEncoderChange = millis();
 	client_write(CLIENT_SERIAL,"SEVENCUT INIT\n");
 	macroMutex = xSemaphoreCreateMutex();
+
+	esp_log_level_set(tag,ESP_LOG_VERBOSE);
 }
 
 /*
@@ -145,8 +144,9 @@ void codeSend(std::string code){
 	gc_execute_line(&code.front(),CLIENT_SERIAL);	
 }
 bool checkSystem(){
-	protocol_execute_realtime();
-	if(sys.state==State::Alarm){
+	static constexpr uint8_t mask = (1<<4)|(1<<5)|(1<<6);
+	uint8_t digitalInput = sys_get_digital_inputs();
+	if(digitalInput&mask){
 		String tmp = "Reset!\n";
 		client_write(CLIENT_SERIAL,(char*)tmp.c_str());
 		return true;
@@ -157,6 +157,18 @@ void endProcess(){
 	codeSend("M5");
 	sys_digital_all_off();
 	xSemaphoreGive(macroMutex);
+}
+bool wait(uint32_t waitTime){
+	int blocks = pdMS_TO_TICKS(100);
+	uint32_t accumulator = 0;
+	while(accumulator<waitTime){
+		if(checkSystem()) 
+			return false;
+		if(accumulator + 100 > waitTime) blocks = pdMS_TO_TICKS(waitTime%100);
+		vTaskDelay(blocks);
+		accumulator += 100;
+	}
+	return true;
 }
 void user_defined_macro(uint8_t index) {
 	if(xSemaphoreTake(macroMutex,0)!=pdTRUE) return;
@@ -185,16 +197,22 @@ void user_defined_macro(uint8_t index) {
 	codeSend("M3S800");
 	codeSend("M62P0");
 	client_write(CLIENT_SERIAL,"Wait!\n");
-	vTaskDelay(pdMS_TO_TICKS(waitTime));
+	if(!wait(waitTime)){
+		endProcess();
+		return;
+	}
 	client_write(CLIENT_SERIAL,"Go!\n");
 	codeSend("M4S3500");
-	vTaskDelay(pdMS_TO_TICKS(INVERT_ROTATION_PERIOD));
+	if(!wait(INVERT_ROTATION_PERIOD)){
+		endProcess();
+		return;
+	}
 	codeSend("M62P1");
 	if(checkSystem()) {
 		endProcess();
 		return;
 	}
-	vTaskDelay(pdMS_TO_TICKS(300));
+	wait(300);
 
 	client_write(CLIENT_SERIAL,"Encoder!\n");
 	while((millis()-lastEncoderChange)<=ENCODER_TL){
@@ -205,8 +223,7 @@ void user_defined_macro(uint8_t index) {
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 	client_write(CLIENT_SERIAL,"End!\n");
-	vTaskDelay(pdMS_TO_TICKS(END_OPERATION_PERIOD));
-
+	wait(END_OPERATION_PERIOD);
 	endProcess();
 }
 

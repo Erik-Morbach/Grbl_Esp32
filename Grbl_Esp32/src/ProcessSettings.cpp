@@ -428,6 +428,11 @@ Error motor_disable(const char* value, WebUI::AuthenticationLevel auth_level, We
 // to performing some system state change.  Each command is responsible
 // for decoding its own value string, if it needs one.
 void make_grbl_commands() {
+#ifdef ENABLE_SD_CARD
+    new GrblCommand("BEG", "SD/Begin", openWriteFile,anyState);
+    new GrblCommand("CAT", "SD/append",appendToWriteFile, anyState);
+    new GrblCommand("END", "SD/End", closeWriteFile, anyState);
+#endif
     new GrblCommand("", "Help", show_grbl_help, anyState);
     new GrblCommand("T", "State", showState, anyState);
     new GrblCommand("J", "Jog", doJog, idleOrJog);
@@ -449,9 +454,6 @@ void make_grbl_commands() {
     new GrblCommand("H", "Home", home_all, idleOrAlarm);
     new GrblCommand("MD", "Motor/Disable", motor_disable, idleOrAlarm);
 
-#ifdef ENABLE_SD_CARD
-    new GrblCommand("CAT", "SD/Append", appendToFileCommand,anyState);
-#endif
 
 #ifdef HOMING_SINGLE_AXIS_COMMANDS
     new GrblCommand("HX", "Home/X", home_x, idleOrAlarm);

@@ -40,7 +40,7 @@ extern WebUI::AuthenticationLevel SD_auth_level;
 SDState  get_sd_state(bool refresh);
 SDState  set_sd_state(SDState state);
 void     listDir(fs::FS& fs, const char* dirname, uint8_t levels, uint8_t client);
-boolean  openFile(fs::FS& fs, const char* path);
+boolean  openFile(fs::FS& fs, const char* path, const char* mode=FILE_READ);
 boolean  closeFile();
 boolean  readFileLine(char* line, int len);
 void     readFile(fs::FS& fs, const char* path);
@@ -48,5 +48,8 @@ float    sd_report_perc_complete();
 uint32_t sd_get_current_line_number();
 void     sd_get_current_filename(char* name);
 
-void  appendToFile(const char *fileName,const char* line);
-Error appendToFileCommand(const char* value, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream);
+void sd_end_run();
+
+Error openWriteFile(const char *fileName, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream);
+Error appendToWriteFile(const char* line, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream);
+Error closeWriteFile(const char* value,   WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream); 

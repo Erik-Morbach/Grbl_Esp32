@@ -449,6 +449,12 @@ void report_gcode_modes(uint8_t client) {
         case ProgramFlow::CompletedM30:
             mode = " M30";
             break;
+        case ProgramFlow::RepeatAlways:
+            mode = " M47";
+            break;
+        case ProgramFlow::RepeatTimes:
+            mode = " M48";
+            break;
     }
     strcat(modes_rpt, mode);
 

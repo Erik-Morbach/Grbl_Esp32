@@ -103,10 +103,12 @@ typedef struct {
     SpindleStop    spindle_stop_ovr;    // Tracks spindle stop override states
     Counter        report_ovr_counter;  // Tracks when to add override data to status reports.
     Counter        report_wco_counter;  // Tracks when to add work coordinate offset data to status reports.
+
 #ifdef ENABLE_PARKING_OVERRIDE_CONTROL
     Override override_ctrl;  // Tracks override control states.
 #endif
     uint32_t spindle_speed;
+    bool programWillRepeat;        // Track program Repetition
 } system_t;
 extern system_t sys;
 

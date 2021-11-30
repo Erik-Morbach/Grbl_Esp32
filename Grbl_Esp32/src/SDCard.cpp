@@ -21,8 +21,10 @@
 #include "Config.h"
 #ifdef ENABLE_SD_CARD
 #    include "SDCard.h"
+#include <memory>
 
 File                       myFile;
+std::string                fileName;
 bool                       SD_ready_next = false;  // Grbl has processed a line and is waiting for another
 uint8_t                    SD_client     = CLIENT_SERIAL;
 WebUI::AuthenticationLevel SD_auth_level = WebUI::AuthenticationLevel::LEVEL_GUEST;
@@ -63,8 +65,10 @@ void listDir(fs::FS& fs, const char* dirname, uint8_t levels, uint8_t client) {
     }
 }
 
-boolean openFile(fs::FS& fs, const char* path) {
-    myFile = fs.open(path);
+boolean openFile(fs::FS& fs, const char* path, const char* mode) {
+    get_sd_state(1);
+    myFile = fs.open(path, mode);
+    fileName = path;
     if (!myFile) {
         //report_status_message(Error::FsFailedRead, CLIENT_SERIAL);
         return false;
@@ -174,53 +178,52 @@ void sd_get_current_filename(char* name) {
 }
 
 
-void appendToFile(const char *fileName, const char *line){
-    if(!SD.begin(5) || sd_state!=SDState::Idle){
-        client_write(CLIENT_SERIAL, "[MSG: SD Error]\r\n"); 
-        return;
-    } 
-    //client_write(CLIENT_SERIAL, "Writing\n"); 
-    set_sd_state(SDState::BusyUploading);
-    File writeFile;
-    if(!SD.exists(fileName)) writeFile = SD.open(fileName,FILE_WRITE);
-    else writeFile = SD.open(fileName,FILE_APPEND);
 
-    int actualWrite = writeFile.println(line);
 
-    /*char debugString[100];
-    sprintf(debugString,"Writing to file %s with mode %d error %d line=%s\n",fileName,SD.exists(fileName),writeFile.getWriteError(),line);
-    client_write(CLIENT_SERIAL, debugString); 
-    //int actualWrite = writeFile.write((uint8_t*)line,strlen(line));
-    sprintf(debugString,"Writed %d bytes\n",actualWrite);
-    client_write(CLIENT_SERIAL, debugString); 
-    */
-
-    writeFile.close();
-    set_sd_state(SDState::Idle);
+int writeFileLine(const char *appendValue){
+    if((!myFile && fileName.size()==0) || !appendValue) return -1;
+    openFile(SD,fileName.c_str(),FILE_APPEND);
+    int response = myFile.println(appendValue);
+    closeFile();
+    std::string aux = "Writed =" + std::string(appendValue) + "\n";
+    client_write(CLIENT_ALL,(char*) aux.c_str());
+    return response;
 }
 
-Error appendToFileCommand(const char* value, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream){
-    if(!value) return Error::InvalidValue;
-    int valueLen = strlen(value);
-    if(valueLen<3) return Error::InvalidValue;
+void sd_end_run(){
+    char temp[50];
+    sd_get_current_filename(temp);
+    grbl_notifyf("SD print done", "%s print is successful", temp);
+    char sent[100];
+    sprintf(sent,"SD print done! %s ended\n",temp);
+    client_write(CLIENT_SERIAL,sent);
+    closeFile();  // close file and clear SD ready/running flags
 
-    char filePath[valueLen];
-    char line[valueLen];
-
-    int indexOfSeparator = -1;
-    for(int valueIndex = 1;valueIndex<valueLen;++valueIndex){
-        if(value[valueIndex]==value[valueIndex+1] && value[valueIndex]=='<'){
-            indexOfSeparator = valueIndex;
-            break;
+    if (sys.programWillRepeat){ 
+        sys.programWillRepeat = false;
+        if(!openFile(SD,temp)){
+            report_status_message(Error::FsFailedOpenFile,CLIENT_ALL);
+            closeFile();
         }
+        else SD_ready_next = true;
     }
-    strncpy(filePath,value,indexOfSeparator);
-    filePath[indexOfSeparator]='\0';
-    strcpy(line,value+indexOfSeparator+2);
-    char debugString[200];
-    sprintf(debugString, "%s << %s\n",filePath,line);
-    client_write(CLIENT_SERIAL,debugString);
-    appendToFile(filePath,line);
-    return Error::Ok;
 }
+
+Error openWriteFile(const char *fileName, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream){
+    Error error = Error::Ok;
+    std::string mode = (SD.exists(fileName)?FILE_APPEND:FILE_WRITE);
+    if(!fileName) error = Error::FsFailedOpenFile;
+    if(!openFile(SD,fileName,mode.c_str())) error = Error::FsFailedOpenFile;
+    return error;
+}
+Error appendToWriteFile(const char* line, WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream){
+    Error error = Error::Ok;
+    int writed = writeFileLine(line);
+    if(writed<0) error = Error::FsFailedWrite;
+    return error;
+}
+Error closeWriteFile(const char* value,   WebUI::AuthenticationLevel auth, WebUI::ESPResponseStream* responseStream){
+    closeFile();
+    return Error::Ok;
+} 
 #endif  //ENABLE_SD_CARD
